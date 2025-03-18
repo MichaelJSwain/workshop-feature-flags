@@ -1,0 +1,36 @@
+.project-view {
+    padding: 20px 30px;
+    height: 100%;
+}
+
+.project-view-header {
+    text-align: left;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+input {
+    width: 300px;
+    padding: 10px;
+}
+
+button {
+    background: orange;
+}
+
+table {
+    width: 100%;
+}
+
+th, td {
+    height: 60px;
+    border-bottom: 1px solid gray
+}
+
+th, td {
+    text-align: left;
+}
