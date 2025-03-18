@@ -21,3 +21,16 @@ input {
 button {
     background: orange;
 }
+
+table {
+    width: 100%;
+}
+
+th, td {
+    height: 60px;
+    border-bottom: 1px solid gray
+}
+
+th, td {
+    text-align: left;
+}
