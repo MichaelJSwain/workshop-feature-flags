@@ -1,4 +1,5 @@
 import './App.css'
+import { Header } from './components/Header';
 
 const experiments = [
   {
@@ -24,9 +25,7 @@ const experiments = [
 function App() {
   return (
     <>
-      <div>
-          <h3>Workshop</h3>
-      </div>
+      <Header />
     </>
   )
 }
