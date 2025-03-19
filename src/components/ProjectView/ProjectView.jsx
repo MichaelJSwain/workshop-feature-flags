@@ -1,29 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './ProjectView.css'
-
-const experiments = [
-    {
-      id: Math.random() * 10000,
-      name: "exp-1",
-      type: "a/b",
-      status: "paused"
-    },
-    {
-      id: Math.random() * 10000,
-      name: "exp-2",
-      type: "a/b",
-      status: "paused"
-    },
-    {
-      id: Math.random() * 10000,
-      name: "exp-3",
-      type: "a/b",
-      status: "paused"
-    }
-  ];
+import axios from 'axios';
 
 export const ProjectView = () => {
+    const [flags, setFlags] = useState([]);
     const [searchText, setSearchText] = useState('');
+
+    const fetchFlags = () => {
+        axios.get('http://localhost:8080/api/26487234/flags')
+            .then(res => {
+                console.log(res);
+                if (res.data?.length) {
+                    setFlags(res.data);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
+
+    useEffect(() => {
+        fetchFlags();
+    }, []);
 
     const handleChange = (e) => {
         setSearchText(e.target.value);
@@ -62,13 +60,13 @@ export const ProjectView = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {experiments.map(experiment => {
-                            return <tr key={experiment.id}>
-                                <td>{experiment.name}</td>
-                                <td>{experiment.type}</td>
-                                <td>{experiment.status}</td>
+                        {flags.map(flag => {
+                            return <tr key={flag.id}>
+                                <td>{flag.name}</td>
+                                <td>{flag.type}</td>
+                                <td>{flag.status}</td>
                                 <td>
-                                    <button onClick={(e) => onExperimentStateChange(experiment, e.target.textContent === "start" ? "running" : "paused")}>{experiment.status === "running" ? "pause" : "start"}</button>
+                                    <button onClick={(e) => onExperimentStateChange(flag, e.target.textContent === "start" ? "running" : "paused")}>{flag.status === "running" ? "pause" : "start"}</button>
                                 </td>
                             </tr>
                         })}
