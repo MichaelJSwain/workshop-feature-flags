@@ -19,6 +19,18 @@ export const ProjectView = () => {
             })
     };
 
+    const onExperimentStateChange = (flag, status) => {
+        console.log(flag, status);
+
+        axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
+        .then(res => {
+            console.log(res);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
     useEffect(() => {
         fetchFlags();
     }, []);
