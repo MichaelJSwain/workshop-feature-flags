@@ -24,11 +24,14 @@ export const ProjectView = () => {
     };
 
     const onExperimentStateChange = (flag, status) => {
-        console.log(flag, status);
 
         axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
         .then(res => {
             console.log(res);
+            
+            // update ui
+            const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: status} : {...f});
+            setFlags(updatedFlags);
         })
         .catch(error => {
             console.log(error);
