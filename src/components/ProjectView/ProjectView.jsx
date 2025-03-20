@@ -69,10 +69,10 @@ export const ProjectView = () => {
             description: descInputText
         })
         .then(res => {
-            console.log(res);
+            const flagList = res.data.data;
 
              // update ui
-             
+             setFlags(flagList);
         })
         .catch(error => {
             console.log(error);
