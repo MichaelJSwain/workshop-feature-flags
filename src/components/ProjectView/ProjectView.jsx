@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './ProjectView.css'
 import axios from 'axios';
 import { createPortal } from 'react-dom';
+import { TableRow } from '../TableRow';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -11,6 +12,7 @@ export const ProjectView = () => {
     const [keyInputText, setKeyInputText] = useState('');
     const [descInputText, setDescInputText] = useState('');
     const [isShowingModal, setIsShowingModal] = useState(false);
+    const [isShowingTooltip, setIsShowingTooltip] = useState(false);
 
     const fetchFlags = () => {
         axios.get('http://localhost:8080/api/26487234/flags')
@@ -88,6 +90,10 @@ export const ProjectView = () => {
         
     }
 
+    const handleDeleteFlag = (flag) => {
+        console.log(flag);
+    }
+
     return (
         <div className='project-view'>
             {isShowingModal && createPortal(
@@ -150,18 +156,12 @@ export const ProjectView = () => {
                             <th>Type</th>
                             <th>Status</th>
                             <th>Action</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {flags.map(flag => {
-                            return <tr key={flag.id}>
-                                <td>{flag.name}</td>
-                                <td>{flag.type}</td>
-                                <td>{flag.status}</td>
-                                <td>
-                                    <button onClick={(e) => onExperimentStateChange(flag, e.target.textContent === "start" ? "running" : "paused")}>{flag.status === "running" ? "pause" : "start"}</button>
-                                </td>
-                            </tr>
+                            return <TableRow key={flag.id} flag={flag} handleExperimentStateChange={onExperimentStateChange} handleDeleteFlag={handleDeleteFlag} />
                         })}
                     </tbody>
                 </table>
