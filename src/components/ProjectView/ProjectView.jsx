@@ -90,7 +90,37 @@ export const ProjectView = () => {
 
     return (
         <div className='project-view'>
-            {isShowingModal && createPortal(<div onClick={() => setIsShowingModal(false)} style={{position: 'fixed', height: '100vh', width: '100vw', background: 'rgba(0,0,0,.5)'}}></div>, document.getElementById('react_portal'))}
+            {isShowingModal && createPortal(
+                <div style={{position: 'fixed', height: '100vh', width: '100vw'}}>
+                    <div style={{ background: 'rgba(0,0,0,.5)', position: 'absolute', zIndex: '-1', height: '100%', width: '100%'}}></div>
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+<div style={{width: 'fit-content', height: 'fit-content', padding: '20px', background: 'lightgrey', borderRadius: '5px'}}>
+                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <button style={{background: 'none'}} onClick={() => setIsShowingModal(false)}>X</button>
+                    </div>
+                    <form onSubmit={handleCreateFlag} >
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                            <label htmlFor='name'>Name:</label>
+                            <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)}></input>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                            <label htmlFor='key'>Key:</label>
+                            <input id='key' placeholder='Add key' value={keyInputText} onChange={(e) => handleChange(e)}></input>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                            <label htmlFor='description'>Description:</label>
+                            <input id='description' placeholder='Add description' value={descInputText} onChange={(e) => handleChange(e)}></input>
+                        </div>
+                        <div style={{marginTop: '15px', display: 'flex', justifyContent: 'flex-end'}}>
+                            <button onClick={() => setIsShowingModal(false)} style={{background: 'none', marginRight: '15px'}}>Cancel</button>
+                            <button>Save</button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+                </div>, 
+                document.getElementById('react_portal')
+            )}
 
            {/* ProjectView Component */}
             <div>
@@ -110,34 +140,6 @@ export const ProjectView = () => {
                 </div>
             </div>
             </div>
-
-            {/* placeholder form to create a flag */}
-            {
-                isShowingFlagForm && 
-                <div style={{width: 'fit-content'}}>
-                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <button style={{background: 'none'}} onClick={() => setIsShowingFlagForm(false)}>X</button>
-                    </div>
-                    <form onSubmit={handleCreateFlag} >
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
-                            <label htmlFor='name'>Name:</label>
-                            <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)}></input>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
-                            <label htmlFor='key'>Key:</label>
-                            <input id='key' placeholder='Add key' value={keyInputText} onChange={(e) => handleChange(e)}></input>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
-                            <label htmlFor='description'>Description:</label>
-                            <input id='description' placeholder='Add description' value={descInputText} onChange={(e) => handleChange(e)}></input>
-                        </div>
-                        <div style={{marginTop: '15px', display: 'flex', justifyContent: 'flex-end'}}>
-                            <button style={{background: 'none', marginRight: '15px'}}>Cancel</button>
-                            <button>Save</button>
-                        </div>
-                    </form>
-                </div>
-            }
 
             {/* table */}
             <div className="project-container">
