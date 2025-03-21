@@ -5,10 +5,11 @@ import { ProjectView } from './components/ProjectView/ProjectView';
 function App() {
   return (
     <>
+      <div id="react_portal"></div>
       <Header />
-    
+      
       <ProjectView />
-   
+      
     </>
   )
 }

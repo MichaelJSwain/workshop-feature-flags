@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './ProjectView.css'
 import axios from 'axios';
+import { createPortal } from 'react-dom';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -9,6 +10,7 @@ export const ProjectView = () => {
     const [nameInputText, setNameInputText] = useState('');
     const [keyInputText, setKeyInputText] = useState('');
     const [descInputText, setDescInputText] = useState('');
+    const [isShowingModal, setIsShowingModal] = useState(false);
 
     const fetchFlags = () => {
         axios.get('http://localhost:8080/api/26487234/flags')
@@ -58,7 +60,8 @@ export const ProjectView = () => {
     }
 
     const handleButtonClick = () => {
-        setIsShowingFlagForm(true);
+        // setIsShowingFlagForm(true);
+        setIsShowingModal(true)
     }
 
     const handleCreateFlag = async (e) => {
@@ -87,6 +90,8 @@ export const ProjectView = () => {
 
     return (
         <div className='project-view'>
+            {isShowingModal && createPortal(<div onClick={() => setIsShowingModal(false)} style={{position: 'fixed', height: '100vh', width: '100vw', background: 'rgba(0,0,0,.5)'}}></div>, document.getElementById('react_portal'))}
+
            {/* ProjectView Component */}
             <div>
         
