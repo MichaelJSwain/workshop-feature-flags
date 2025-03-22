@@ -67,9 +67,7 @@ export const ProjectView = () => {
         setIsShowingModal(true)
     }
 
-    const handleCreateFlag = async (e) => {
-        e.preventDefault();
-
+    const handleCreateFlag = async () => {
         // update backend
          axios.post(`http://localhost:8080/api/48923489/flags`, {
             name: nameInputText,
@@ -121,8 +119,7 @@ export const ProjectView = () => {
         <div className='project-view'>
             {isShowingModal && 
             createPortal(
-                <Modal closeFunc={() => setIsShowingModal(false)}>
-                    <form onSubmit={handleCreateFlag} >
+                <Modal closeFunc={() => setIsShowingModal(false)} submitFunc={handleCreateFlag} header="Create Flag" cta="Create">
                         <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
                             <label htmlFor='name'>Name:</label>
                             <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)}></input>
@@ -135,11 +132,6 @@ export const ProjectView = () => {
                             <label htmlFor='description'>Description:</label>
                             <input id='description' placeholder='Add description' value={descInputText} onChange={(e) => handleChange(e)}></input>
                         </div>
-                        <div style={{marginTop: '15px', display: 'flex', justifyContent: 'flex-end'}}>
-                            <button onClick={() => setIsShowingModal(false)} style={{background: 'none', marginRight: '15px'}}>Cancel</button>
-                            <button>Save</button>
-                        </div>
-                    </form>
                 </Modal>, 
                 document.getElementById('react_portal')
             )}
