@@ -18,35 +18,25 @@ export const ProjectView = () => {
 
     const fetchFlags = () => {
         setIsLoading(true);
-
-        setTimeout(() => {
-            axios.get('http://localhost:8080/api/26487234/flags')
-            .then(res => {
-                const fetchedFlags = res.data?.length ? res.data : [];
-                setFlags(fetchedFlags);
-                setFilteredFlags(fetchedFlags);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.log(error);
-                setFlags([]);
-                setFilteredFlags([]);
-                setIsLoading(false);
-            })
-        }, 3000);
-
+        axios.get('http://localhost:8080/api/26487234/flags')
+        .then(res => {
+            const fetchedFlags = res.data?.length ? res.data : [];
+            setFlags(fetchedFlags);
+            setIsLoading(false);
+        })
+        .catch(error => {
+            console.log(error);
+            setFlags([]);
+            setIsLoading(false);
+        })
     };
 
     const onExperimentStateChange = (flag) => {
-
         axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
         .then(res => {
-            console.log(res);
-            
             // update ui
             const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: flag.status === 'running' ? 'paused' : 'running'} : {...f});
             setFlags(updatedFlags);
-            setFilteredFlags(updatedFlags);
         })
         .catch(error => {
             console.log(error);
@@ -78,7 +68,6 @@ export const ProjectView = () => {
 
     const handleCreateFlag = async (e) => {
         e.preventDefault();
-        console.log("creating flag...");
 
         // update backend
          axios.post(`http://localhost:8080/api/48923489/flags`, {
@@ -88,10 +77,9 @@ export const ProjectView = () => {
         })
         .then(res => {
             const flagList = res.data.data;
-            console.log('flag list = ', flagList);
+
              // update ui
              setFlags(flagList);
-             setFilteredFlags(flagList);
         })
         .catch(error => {
             console.log(error);
@@ -107,7 +95,6 @@ export const ProjectView = () => {
             console.log(res);
             // update ui
             setFlags(res.data);
-            setFilteredFlags(res.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -124,6 +111,10 @@ export const ProjectView = () => {
         console.log("use effect triggered by change to search text");
         handleFilterFlags();
     }, [searchText]);
+
+    useEffect(() => {
+        setFilteredFlags(flags);
+    }, [flags]);
 
     return (
         <div className='project-view'>
