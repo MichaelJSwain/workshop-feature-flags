@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import './ProjectView.css'
 import axios from 'axios';
+import { createPortal } from 'react-dom';
+import { TableRow } from '../TableRow';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -9,6 +11,8 @@ export const ProjectView = () => {
     const [nameInputText, setNameInputText] = useState('');
     const [keyInputText, setKeyInputText] = useState('');
     const [descInputText, setDescInputText] = useState('');
+    const [isShowingModal, setIsShowingModal] = useState(false);
+    const [isShowingTooltip, setIsShowingTooltip] = useState(false);
 
     const fetchFlags = () => {
         axios.get('http://localhost:8080/api/26487234/flags')
@@ -23,14 +27,14 @@ export const ProjectView = () => {
             })
     };
 
-    const onExperimentStateChange = (flag, status) => {
+    const onExperimentStateChange = (flag) => {
 
         axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
         .then(res => {
             console.log(res);
             
             // update ui
-            const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: status} : {...f});
+            const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: flag.status === 'running' ? 'paused' : 'running'} : {...f});
             setFlags(updatedFlags);
         })
         .catch(error => {
@@ -58,7 +62,8 @@ export const ProjectView = () => {
     }
 
     const handleButtonClick = () => {
-        setIsShowingFlagForm(true);
+        // setIsShowingFlagForm(true);
+        setIsShowingModal(true)
     }
 
     const handleCreateFlag = async (e) => {
@@ -73,7 +78,7 @@ export const ProjectView = () => {
         })
         .then(res => {
             const flagList = res.data.data;
-
+            console.log('flag list = ', flagList);
              // update ui
              setFlags(flagList);
         })
@@ -85,8 +90,52 @@ export const ProjectView = () => {
         
     }
 
+    const handleDeleteFlag = (flag) => {
+        axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}`)
+        .then(res => {
+            console.log(res);
+            // update ui
+            setFlags(res.data);
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    }
+
     return (
         <div className='project-view'>
+            {isShowingModal && createPortal(
+                <div style={{position: 'fixed', height: '100vh', width: '100vw'}}>
+                    <div style={{ background: 'rgba(0,0,0,.5)', position: 'absolute', zIndex: '-1', height: '100%', width: '100%'}}></div>
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+<div style={{width: 'fit-content', height: 'fit-content', padding: '20px', background: 'lightgrey', borderRadius: '5px'}}>
+                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <button style={{background: 'none'}} onClick={() => setIsShowingModal(false)}>X</button>
+                    </div>
+                    <form onSubmit={handleCreateFlag} >
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                            <label htmlFor='name'>Name:</label>
+                            <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)}></input>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                            <label htmlFor='key'>Key:</label>
+                            <input id='key' placeholder='Add key' value={keyInputText} onChange={(e) => handleChange(e)}></input>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                            <label htmlFor='description'>Description:</label>
+                            <input id='description' placeholder='Add description' value={descInputText} onChange={(e) => handleChange(e)}></input>
+                        </div>
+                        <div style={{marginTop: '15px', display: 'flex', justifyContent: 'flex-end'}}>
+                            <button onClick={() => setIsShowingModal(false)} style={{background: 'none', marginRight: '15px'}}>Cancel</button>
+                            <button>Save</button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+                </div>, 
+                document.getElementById('react_portal')
+            )}
+
            {/* ProjectView Component */}
             <div>
         
@@ -106,34 +155,6 @@ export const ProjectView = () => {
             </div>
             </div>
 
-            {/* placeholder form to create a flag */}
-            {
-                isShowingFlagForm && 
-                <div style={{width: 'fit-content'}}>
-                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <button style={{background: 'none'}} onClick={() => setIsShowingFlagForm(false)}>X</button>
-                    </div>
-                    <form onSubmit={handleCreateFlag} >
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
-                            <label htmlFor='name'>Name:</label>
-                            <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)}></input>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
-                            <label htmlFor='key'>Key:</label>
-                            <input id='key' placeholder='Add key' value={keyInputText} onChange={(e) => handleChange(e)}></input>
-                        </div>
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
-                            <label htmlFor='description'>Description:</label>
-                            <input id='description' placeholder='Add description' value={descInputText} onChange={(e) => handleChange(e)}></input>
-                        </div>
-                        <div style={{marginTop: '15px', display: 'flex', justifyContent: 'flex-end'}}>
-                            <button style={{background: 'none', marginRight: '15px'}}>Cancel</button>
-                            <button>Save</button>
-                        </div>
-                    </form>
-                </div>
-            }
-
             {/* table */}
             <div className="project-container">
                 <table>
@@ -143,18 +164,12 @@ export const ProjectView = () => {
                             <th>Type</th>
                             <th>Status</th>
                             <th>Action</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {flags.map(flag => {
-                            return <tr key={flag.id}>
-                                <td>{flag.name}</td>
-                                <td>{flag.type}</td>
-                                <td>{flag.status}</td>
-                                <td>
-                                    <button onClick={(e) => onExperimentStateChange(flag, e.target.textContent === "start" ? "running" : "paused")}>{flag.status === "running" ? "pause" : "start"}</button>
-                                </td>
-                            </tr>
+                            return <TableRow key={flag.id} flag={flag} handleExperimentStateChange={onExperimentStateChange} handleDeleteFlag={handleDeleteFlag} />
                         })}
                     </tbody>
                 </table>
