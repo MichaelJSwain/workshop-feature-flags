@@ -27,14 +27,14 @@ export const ProjectView = () => {
             })
     };
 
-    const onExperimentStateChange = (flag, status) => {
+    const onExperimentStateChange = (flag) => {
 
         axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
         .then(res => {
             console.log(res);
             
             // update ui
-            const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: status} : {...f});
+            const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: flag.status === 'running' ? 'paused' : 'running'} : {...f});
             setFlags(updatedFlags);
         })
         .catch(error => {
@@ -78,7 +78,7 @@ export const ProjectView = () => {
         })
         .then(res => {
             const flagList = res.data.data;
-
+            console.log('flag list = ', flagList);
              // update ui
              setFlags(flagList);
         })
@@ -91,7 +91,15 @@ export const ProjectView = () => {
     }
 
     const handleDeleteFlag = (flag) => {
-        console.log(flag);
+        axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}`)
+        .then(res => {
+            console.log(res);
+            // update ui
+            setFlags(res.data);
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
     }
 
     return (

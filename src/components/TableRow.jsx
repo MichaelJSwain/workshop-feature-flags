@@ -8,7 +8,7 @@ export const TableRow = ({flag, handleExperimentStateChange, handleDeleteFlag}) 
     <td>{flag.type}</td>
     <td>{flag.status}</td>
     <td>
-        <button onClick={(e) => handleExperimentStateChange(flag, e.target.textContent === "start" ? "running" : "paused")}>{flag.status === "running" ? "pause" : "start"}</button>
+        <button onClick={(e) => handleExperimentStateChange(flag)}>{flag.status === "running" ? "pause" : "start"}</button>
     </td>
     <td>
         <a href="#" onClick={() => setIsShowingTooltip(!isShowingTooltip)} className="text-dark" style={{fontSize: '1.5rem'}}><svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path></svg></a>
