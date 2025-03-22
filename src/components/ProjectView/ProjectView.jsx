@@ -6,7 +6,9 @@ import { TableRow } from '../TableRow';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
+    const [filteredFlags, setFilteredFlags] = useState([]);
     const [searchText, setSearchText] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [isShowingFlagForm, setIsShowingFlagForm] = useState(false);
     const [nameInputText, setNameInputText] = useState('');
     const [keyInputText, setKeyInputText] = useState('');
@@ -17,10 +19,9 @@ export const ProjectView = () => {
     const fetchFlags = () => {
         axios.get('http://localhost:8080/api/26487234/flags')
             .then(res => {
-                console.log(res);
-                if (res.data?.length) {
-                    setFlags(res.data);
-                }
+                const fetchedFlags = res.data?.length ? res.data : [];
+                setFlags(fetchedFlags);
+                setFilteredFlags(fetchedFlags);
             })
             .catch(error => {
                 console.log(error);
@@ -58,7 +59,6 @@ export const ProjectView = () => {
         } else if (id === 'description') {
             setDescInputText(e.target.value);
         }
-        
     }
 
     const handleButtonClick = () => {
@@ -101,6 +101,17 @@ export const ProjectView = () => {
             console.log(error.message);
         })
     }
+
+    const handleFilterFlags = () => {
+        console.log(flags);
+        const res = flags.filter(f => (f.name.includes(searchText) || f.key.includes(searchText)));
+        setFilteredFlags(res);
+    }
+
+    useEffect(() => {
+        console.log("use effect triggered by change to search text");
+        handleFilterFlags();
+    }, [searchText]);
 
     return (
         <div className='project-view'>
@@ -168,12 +179,12 @@ export const ProjectView = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {flags.map(flag => {
+                        {filteredFlags.map(flag => {
                             return <TableRow key={flag.id} flag={flag} handleExperimentStateChange={onExperimentStateChange} handleDeleteFlag={handleDeleteFlag} />
                         })}
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div> 
     )
 }
