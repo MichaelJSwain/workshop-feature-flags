@@ -17,15 +17,24 @@ export const ProjectView = () => {
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
 
     const fetchFlags = () => {
-        axios.get('http://localhost:8080/api/26487234/flags')
+        setIsLoading(true);
+
+        setTimeout(() => {
+            axios.get('http://localhost:8080/api/26487234/flags')
             .then(res => {
                 const fetchedFlags = res.data?.length ? res.data : [];
                 setFlags(fetchedFlags);
                 setFilteredFlags(fetchedFlags);
+                setIsLoading(false);
             })
             .catch(error => {
                 console.log(error);
+                setFlags([]);
+                setFilteredFlags([]);
+                setIsLoading(false);
             })
+        }, 3000);
+
     };
 
     const onExperimentStateChange = (flag) => {
@@ -37,6 +46,7 @@ export const ProjectView = () => {
             // update ui
             const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: flag.status === 'running' ? 'paused' : 'running'} : {...f});
             setFlags(updatedFlags);
+            setFilteredFlags(updatedFlags);
         })
         .catch(error => {
             console.log(error);
@@ -81,6 +91,7 @@ export const ProjectView = () => {
             console.log('flag list = ', flagList);
              // update ui
              setFlags(flagList);
+             setFilteredFlags(flagList);
         })
         .catch(error => {
             console.log(error);
@@ -96,6 +107,7 @@ export const ProjectView = () => {
             console.log(res);
             // update ui
             setFlags(res.data);
+            setFilteredFlags(res.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -167,7 +179,9 @@ export const ProjectView = () => {
             </div>
 
             {/* table */}
-            <div className="project-container">
+            {isLoading && <div>Loading...</div>}
+
+            {(!isLoading && !!flags.length) && <div className="project-container">
                 <table>
                     <thead>
                         <tr>
@@ -184,7 +198,10 @@ export const ProjectView = () => {
                         })}
                     </tbody>
                 </table>
-            </div>
+            </div>}
+
+            {(!isLoading && !flags.length && !filteredFlags.length) && <div>You haven't created any flags yet. Get started by clicking the 'Create new flag...' button</div>}
+            {(!isLoading && !!flags.length && !filteredFlags.length) && <div>No matching flags were found for your search term. Try again?</div>}
         </div> 
     )
 }
