@@ -6,7 +6,9 @@ import { TableRow } from '../TableRow';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
+    const [filteredFlags, setFilteredFlags] = useState([]);
     const [searchText, setSearchText] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [isShowingFlagForm, setIsShowingFlagForm] = useState(false);
     const [nameInputText, setNameInputText] = useState('');
     const [keyInputText, setKeyInputText] = useState('');
@@ -15,24 +17,23 @@ export const ProjectView = () => {
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
 
     const fetchFlags = () => {
+        setIsLoading(true);
         axios.get('http://localhost:8080/api/26487234/flags')
-            .then(res => {
-                console.log(res);
-                if (res.data?.length) {
-                    setFlags(res.data);
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        .then(res => {
+            const fetchedFlags = res.data?.length ? res.data : [];
+            setFlags(fetchedFlags);
+            setIsLoading(false);
+        })
+        .catch(error => {
+            console.log(error);
+            setFlags([]);
+            setIsLoading(false);
+        })
     };
 
     const onExperimentStateChange = (flag) => {
-
         axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
         .then(res => {
-            console.log(res);
-            
             // update ui
             const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: flag.status === 'running' ? 'paused' : 'running'} : {...f});
             setFlags(updatedFlags);
@@ -58,7 +59,6 @@ export const ProjectView = () => {
         } else if (id === 'description') {
             setDescInputText(e.target.value);
         }
-        
     }
 
     const handleButtonClick = () => {
@@ -68,7 +68,6 @@ export const ProjectView = () => {
 
     const handleCreateFlag = async (e) => {
         e.preventDefault();
-        console.log("creating flag...");
 
         // update backend
          axios.post(`http://localhost:8080/api/48923489/flags`, {
@@ -78,7 +77,7 @@ export const ProjectView = () => {
         })
         .then(res => {
             const flagList = res.data.data;
-            console.log('flag list = ', flagList);
+
              // update ui
              setFlags(flagList);
         })
@@ -101,6 +100,21 @@ export const ProjectView = () => {
             console.log(error.message);
         })
     }
+
+    const handleFilterFlags = () => {
+        console.log(flags);
+        const res = flags.filter(f => (f.name.includes(searchText) || f.key.includes(searchText)));
+        setFilteredFlags(res);
+    }
+
+    useEffect(() => {
+        console.log("use effect triggered by change to search text");
+        handleFilterFlags();
+    }, [searchText]);
+
+    useEffect(() => {
+        setFilteredFlags(flags);
+    }, [flags]);
 
     return (
         <div className='project-view'>
@@ -156,7 +170,9 @@ export const ProjectView = () => {
             </div>
 
             {/* table */}
-            <div className="project-container">
+            {isLoading && <div>Loading...</div>}
+
+            {(!isLoading && !!flags.length) && <div className="project-container">
                 <table>
                     <thead>
                         <tr>
@@ -168,12 +184,15 @@ export const ProjectView = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {flags.map(flag => {
+                        {filteredFlags.map(flag => {
                             return <TableRow key={flag.id} flag={flag} handleExperimentStateChange={onExperimentStateChange} handleDeleteFlag={handleDeleteFlag} />
                         })}
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </div>}
+
+            {(!isLoading && !flags.length && !filteredFlags.length) && <div>You haven't created any flags yet. Get started by clicking the 'Create new flag...' button</div>}
+            {(!isLoading && !!flags.length && !filteredFlags.length) && <div>No matching flags were found for your search term. Try again?</div>}
+        </div> 
     )
 }
