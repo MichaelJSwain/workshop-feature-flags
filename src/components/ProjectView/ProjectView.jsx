@@ -3,6 +3,7 @@ import './ProjectView.css'
 import axios from 'axios';
 import { createPortal } from 'react-dom';
 import { TableRow } from '../TableRow';
+import { Modal } from '../Modal/Modal';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -118,14 +119,9 @@ export const ProjectView = () => {
 
     return (
         <div className='project-view'>
-            {isShowingModal && createPortal(
-                <div style={{position: 'fixed', height: '100vh', width: '100vw'}}>
-                    <div style={{ background: 'rgba(0,0,0,.5)', position: 'absolute', zIndex: '-1', height: '100%', width: '100%'}}></div>
-                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
-<div style={{width: 'fit-content', height: 'fit-content', padding: '20px', background: 'lightgrey', borderRadius: '5px'}}>
-                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <button style={{background: 'none'}} onClick={() => setIsShowingModal(false)}>X</button>
-                    </div>
+            {isShowingModal && 
+            createPortal(
+                <Modal closeFunc={() => setIsShowingModal(false)}>
                     <form onSubmit={handleCreateFlag} >
                         <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
                             <label htmlFor='name'>Name:</label>
@@ -144,9 +140,7 @@ export const ProjectView = () => {
                             <button>Save</button>
                         </div>
                     </form>
-                </div>
-                </div>
-                </div>, 
+                </Modal>, 
                 document.getElementById('react_portal')
             )}
 
