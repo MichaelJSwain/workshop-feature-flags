@@ -120,17 +120,17 @@ export const ProjectView = () => {
             {isShowingModal && 
             createPortal(
                 <Modal closeFunc={() => setIsShowingModal(false)} submitFunc={handleCreateFlag} header="Create Flag" cta="Create">
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '24px'}}>
                             <label htmlFor='name'>Name:</label>
-                            <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)}></input>
+                            <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)} style={{background: 'white', borderRadius: '2px', border: '0.5px solid gray', marginTop: '8px', color: 'black'}}></input>
                         </div>
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '24px'}}>
                             <label htmlFor='key'>Key:</label>
-                            <input id='key' placeholder='Add key' value={keyInputText} onChange={(e) => handleChange(e)}></input>
+                            <input id='key' placeholder='Add key' value={keyInputText} onChange={(e) => handleChange(e)} style={{background: 'white', borderRadius: '2px', border: '0.5px solid gray', marginTop: '8px', color: 'black'}}></input>
                         </div>
-                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                        <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '24px'}}>
                             <label htmlFor='description'>Description:</label>
-                            <input id='description' placeholder='Add description' value={descInputText} onChange={(e) => handleChange(e)}></input>
+                            <input id='description' placeholder='Add description' value={descInputText} onChange={(e) => handleChange(e)} style={{background: 'white', borderRadius: '2px', border: '0.5px solid gray', marginTop: '8px', color: 'black'}}></input>
                         </div>
                 </Modal>, 
                 document.getElementById('react_portal')
