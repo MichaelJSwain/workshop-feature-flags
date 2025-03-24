@@ -2,13 +2,16 @@ import { useState } from "react";
 import { Modal } from "./Modal/Modal";
 import { createPortal } from "react-dom";
 import { ClickAwayListener } from "./ClickAwayListener";
+import { Link } from "react-router-dom";
 
 export const TableRow = ({flag, handleExperimentStateChange, handleDeleteFlag}) => {
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
     const [isShowingWarning, setIsShowingWarning] = useState(false);
 
     return <tr key={flag.id}>
-    <td>{flag.name}</td>
+    <td>
+        <Link to={`/flags/${flag.key}`}>{flag.name}</Link>
+    </td>
     <td>{flag.type}</td>
     <td>{flag.status}</td>
     <td>
