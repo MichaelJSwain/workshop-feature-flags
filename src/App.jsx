@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css'
 import { Header } from './components/Header/Header';
-import { ProjectView } from './components/ProjectView/ProjectView';
+import { ProjectView } from './pages/ProjectView/ProjectView';
 import { FlagDetailView } from './pages/FlagDetailView/FlagDetailView';
 
 function App() {
