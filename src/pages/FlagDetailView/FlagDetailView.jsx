@@ -59,10 +59,29 @@ export const FlagDetailView = () => {
 
                         
                         <div>
-                            
+                            <div style={{display: 'flex', justifyContent: 'space-between', borderBottom: '0.5px solid gray', paddingBottom: '16px'}}>
+                                <div style={{display: 'flex'}}>
+                                    <div style={{textAlign: 'left', marginRight: '15px'}}>
+                                        <div>Environment</div>
+                                        <div>Production</div>
+                                    </div>
+                                    <div style={{textAlign: 'left'}}>
+                                        <div>Status</div>
+                                        <div>Draft</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button>Run</button>
+                                </div>
+                            </div>
+
                             {!!flag.rules.length ?
                             <>
-                                
+                                <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0'}}>
+                                    The following rules will be evaluated for all visitors
+                                    <button>Add Rule</button>
+                                </div>
                                 <div>
                                     {flag.rules.map((rule, idx) => {
                                         return <div style={{display: 'flex', width: '100%', margin: '8px 0px', alignItems: 'center'}} onClick={() => setSelectedRule(rule)}>
@@ -91,7 +110,7 @@ export const FlagDetailView = () => {
                                 </div>
                             </> :
                             <>
-                                <div style={{display: 'flex', width: '100%', margin: '8px 0px'}} onClick={() => setSelectedRule(rule)}>
+                                <div style={{display: 'flex', width: '100%', margin: '8px 0px', paddingTop: '16px'}} onClick={() => setSelectedRule(rule)}>
                                             <div style={{margin: '0 8px 0 16px'}}>1</div>
                                             <div style={{border: '0.5px solid gray',
                                     borderRadius: '2px',
