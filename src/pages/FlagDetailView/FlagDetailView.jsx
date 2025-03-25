@@ -128,7 +128,73 @@ export const FlagDetailView = () => {
     boxShadow: 'rgb(224, 224, 224) -1px 0px'}}>
                         {(!!flag.rules.length && !selectedRule) && <div>Select a rule to edit</div>}
                         {!flag.rules.length && <div>Add a rule to customize delivery or run an experiment</div>}
-                        {selectedRule && <div>{selectedRule.key}</div>}
+                        {selectedRule && <div>
+                            <h1>Rule</h1>
+
+                            <div style={{display: 'flex', justifyContent: 'space-between', borderBottom: '0.5px solid gray', paddingBottom: '16px'}}>
+                                <div style={{display: 'flex'}}>
+                                    <div style={{textAlign: 'left', marginRight: '15px'}}>
+                                        <div>Environment</div>
+                                        <div>Production</div>
+                                    </div>
+                                    <div style={{textAlign: 'left'}}>
+                                        <div>Status</div>
+                                        <div>Draft</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button>Run</button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div>
+                                    <label htmlFor="name">Name</label>
+                                    <input type="text" id="name"/>
+                                </div>
+                                <div>
+                                    <label htmlFor="key">Key</label>
+                                    <input type="text" id="key"/>
+                                </div>
+
+                                <div style={{display: 'flex', width: '100%'}}>
+                                    <div style={{width: '100%'}}>
+                                        <div>
+                                            <span>Variations</span>
+                                        </div>
+                                        <div style={{display: 'flex'}}>
+                                            <div>1</div>
+                                            <div style={{width: '100%'}}>
+                                                <button style={{width: '100%'}}>Off</button>
+                                            </div>
+                                        </div>
+                                        <div style={{display: 'flex'}}>
+                                            <div>2</div>
+                                            <div style={{width: '100%'}}>
+                                                <button style={{width: '100%'}}>On</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div>
+                                            <span>Distribution</span>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <input value="0" style={{width: '50px'}}/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <input value="100%" style={{width: '50px'}}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>}
                     </div>
                 </div>
             }
