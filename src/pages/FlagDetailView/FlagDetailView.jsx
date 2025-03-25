@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { LayoutArea } from "../../components/LayoutArea/LayoutArea";
 import { LayoutGrid } from "../../components/LayoutGrid/LayoutGrid";
+import { Button } from "../../components/Button/Button";
 
 const dummyData = [{
     name: 'exp 1',
@@ -76,7 +77,7 @@ export const FlagDetailView = () => {
                                 </div>
 
                                 <div>
-                                    <button>Run</button>
+                                <Button type="button" style="outline" size="small">Run</Button>
                                 </div>
                             </div>
 
@@ -84,7 +85,7 @@ export const FlagDetailView = () => {
                             <>
                                 <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0'}}>
                                     The following rules will be evaluated for all visitors
-                                    <button>Add Rule</button>
+                                    <Button type="button" style="outline" size="small">Add Rule</Button>
                                 </div>
                                 <div>
                                     {flag.rules.map((rule, idx) => {
@@ -121,7 +122,7 @@ export const FlagDetailView = () => {
                                     padding: '15px',
                                     width: '100%'}}>
                                         Add rules to customize delivery or run an experiment
-                                            <button>Add rule</button>
+                                           <Button type="button" style="outline">Add rule</Button>
                                             </div>
                                         </div>
                             </>
@@ -149,7 +150,7 @@ export const FlagDetailView = () => {
                                 </div>
 
                                 <div>
-                                    <button>Run</button>
+                                <Button style="outline">Run</Button>
                                 </div>
                             </div>
                             
@@ -203,7 +204,10 @@ export const FlagDetailView = () => {
                     </div>
                     </LayoutArea>
                     <LayoutArea area="form-controls">
-                        <h1>form controls</h1>
+                        <div>
+                            <Button type="button" style="plain">Revert</Button>
+                            <Button type="button"style="highlight" isDisabled={true}>Save</Button>
+                        </div>
                     </LayoutArea>
                 </LayoutGrid>
             }

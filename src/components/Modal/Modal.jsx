@@ -1,3 +1,4 @@
+import { Button } from '../Button/Button';
 import './Modal.css';
 
 export const Modal = ({children, closeFunc, submitFunc, header, cta}) => {
@@ -21,8 +22,8 @@ export const Modal = ({children, closeFunc, submitFunc, header, cta}) => {
                         </div>
                         
                         <div className="modal-footer">
-                            <button onClick={closeFunc} className='modal-cancel-btn'>Cancel</button>
-                            <button type="submit">{cta}</button>
+                            <Button style="plain" type="button" onClick={closeFunc}>Cancel</Button>
+                            <Button style="highlight" type="submit">{cta}</Button>
                         </div>
                     </form>
                 </div>

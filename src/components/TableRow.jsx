@@ -3,6 +3,7 @@ import { Modal } from "./Modal/Modal";
 import { createPortal } from "react-dom";
 import { ClickAwayListener } from "./ClickAwayListener";
 import { Link } from "react-router-dom";
+import { Button } from "./Button/Button";
 
 export const TableRow = ({flag, handleExperimentStateChange, handleDeleteFlag}) => {
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
@@ -24,7 +25,7 @@ export const TableRow = ({flag, handleExperimentStateChange, handleDeleteFlag}) 
         </Modal>,
         document.getElementById('react_portal')
         )}
-        <button onClick={(e) => setIsShowingWarning(true)}>{flag.status === "running" ? "pause" : "start"}</button>
+        <Button style="outline" onClick={(e) => setIsShowingWarning(true)}>{flag.status === "running" ? "pause" : "start"}</Button>
     </td>
     <td>
         <ClickAwayListener onClickAway={() => {setIsShowingTooltip(false)}}>
