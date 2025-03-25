@@ -4,6 +4,7 @@ import axios from 'axios';
 import { createPortal } from 'react-dom';
 import { TableRow } from '../../components/TableRow';
 import { Modal } from '../../components/Modal/Modal';
+import { Button } from '../../components/Button/Button';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -150,7 +151,7 @@ export const ProjectView = () => {
                 <input onChange={(e) => handleChange(e)} placeholder='Search by name or key' value={searchText} id='search'></input>
                 </div>
                 <div className='toolbar_right'>
-                <button onClick={handleButtonClick}>Create New Flag...</button>
+                    <Button style="highlight" onClick={handleButtonClick}>Create New Flag...</Button>
                 </div>
             </div>
             </div>
