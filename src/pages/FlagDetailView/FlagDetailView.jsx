@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
+import { LayoutArea } from "../../components/LayoutArea/LayoutArea";
+import { LayoutGrid } from "../../components/LayoutGrid/LayoutGrid";
 
 const dummyData = [{
     name: 'exp 1',
@@ -52,8 +54,10 @@ export const FlagDetailView = () => {
 
             
             {(!isLoading && flag) && 
-                <div style={{display: 'flex', height: '100%'}}>
-                    <div style={{width: '50%', padding: '32px'}}>
+                
+                <LayoutGrid areas={`'main config' 'form-controls form-controls'`} columns="1fr 1fr" gap="0px" rows="1fr minmax(75px, auto)">
+                    <LayoutArea area="main">
+                    <div style={{height: '100%'}}>
                         <h1>{flag.name}</h1>
                         <h5>{flag.key}</h5>
 
@@ -124,8 +128,9 @@ export const FlagDetailView = () => {
                             }
                         </div>
                     </div>
-                    <div style={{width: '50%',  padding: '32px', background: 'rgb(250, 250, 250)',
-    boxShadow: 'rgb(224, 224, 224) -1px 0px'}}>
+                    </LayoutArea>
+                    <LayoutArea area="config">
+                    <div style={{height: '100%'}}>
                         {(!!flag.rules.length && !selectedRule) && <div>Select a rule to edit</div>}
                         {!flag.rules.length && <div>Add a rule to customize delivery or run an experiment</div>}
                         {selectedRule && <div>
@@ -196,7 +201,11 @@ export const FlagDetailView = () => {
                             </div>
                         </div>}
                     </div>
-                </div>
+                    </LayoutArea>
+                    <LayoutArea area="form-controls">
+                        <h1>form controls</h1>
+                    </LayoutArea>
+                </LayoutGrid>
             }
 
             {(!isLoading && !flag) && 
