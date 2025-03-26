@@ -1,0 +1,7 @@
+.ui-dropdown__block-link {
+    padding: 2px 12px;
+    border-radius: 2px;
+}
+.ui-dropdown__block-link:hover {
+    background: #f0f3ff;
+}
