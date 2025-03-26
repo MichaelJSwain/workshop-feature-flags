@@ -4,6 +4,7 @@ import { LayoutArea } from "../../components/LayoutArea/LayoutArea";
 import { LayoutGrid } from "../../components/LayoutGrid/LayoutGrid";
 import { Button } from "../../components/Button/Button";
 import { DropdownGroup } from "../../components/DropdownGroup/DropdownGroup";
+import { RuleList } from "../../components/RuleList/RuleList";
 
 const dummyData = [{
     name: 'exp 1',
@@ -89,7 +90,9 @@ export const FlagDetailView = () => {
                                     <DropdownGroup isOpen={false}></DropdownGroup>
                                 </div>
                                 <div>
-                                    {flag.rules.map((rule, idx) => {
+                                   <RuleList items={flag.rules} onClick={(rule) => setSelectedRule(rule)}></RuleList>
+                                    
+                                    {/* {flag.rules.map((rule, idx) => {
                                         return <div style={{display: 'flex', width: '100%', margin: '8px 0px', alignItems: 'center'}} onClick={() => setSelectedRule(rule)}>
                                             <div style={{margin: '0 8px 0 16px'}}>{idx + 1}</div>
                                             <div style={{border: '0.5px solid gray',
@@ -112,7 +115,7 @@ export const FlagDetailView = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    })}
+                                    })} */}
                                 </div>
                             </> :
                             <>
