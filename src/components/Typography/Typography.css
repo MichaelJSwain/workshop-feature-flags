@@ -1,0 +1,12 @@
+.typography-body {
+    font-weight: 400;
+    line-height: 1.5rem;
+    font-size: .875rem;
+    letter-spacing: -0.011rem;
+}
+.typography-xs {
+    font-weight: 400;
+    line-height: 1.25rem;
+    font-size: .75rem;
+    letter-spacing: 0rem;
+}

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import { LayoutArea } from "../../components/LayoutArea/LayoutArea";
 import { LayoutGrid } from "../../components/LayoutGrid/LayoutGrid";
 import { Button } from "../../components/Button/Button";
+import { DropdownGroup } from "../../components/DropdownGroup/DropdownGroup";
 
 const dummyData = [{
     name: 'exp 1',
@@ -85,7 +86,7 @@ export const FlagDetailView = () => {
                             <>
                                 <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0'}}>
                                     The following rules will be evaluated for all visitors
-                                    <Button type="button" style="outline" size="small">Add Rule</Button>
+                                    <DropdownGroup isOpen={false}></DropdownGroup>
                                 </div>
                                 <div>
                                     {flag.rules.map((rule, idx) => {
@@ -122,7 +123,7 @@ export const FlagDetailView = () => {
                                     padding: '15px',
                                     width: '100%'}}>
                                         Add rules to customize delivery or run an experiment
-                                           <Button type="button" style="outline">Add rule</Button>
+                                           <DropdownGroup isOpen={false}></DropdownGroup>
                                             </div>
                                         </div>
                             </>

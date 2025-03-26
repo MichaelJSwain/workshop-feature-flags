@@ -1,0 +1,7 @@
+.ui-dropdown__item {
+    padding: 4px;
+    margin-bottom: 1px;
+}
+.ui-dropdown__item--separator {
+    padding: 8px 16px;
+}
