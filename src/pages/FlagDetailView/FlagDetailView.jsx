@@ -30,27 +30,7 @@ const dummyData = [{
 }]
 
 export const FlagDetailView = () => {
-    const {flagID} = useParams();
-    const [isLoading, setIsLoading] = useState(false);
-    const [flag, setFlag] = useState(null);
-    const [selectedRule, setSelectedRule] = useState(null);
-    const ct = useContext(DetailViewContext)
-
-    useEffect(() => {
-        setIsLoading(true);
-
-        // fetch data for flag
-        setTimeout(() => {
-            const foundFlag = dummyData.find(item => item.key == flagID);
-
-            if (foundFlag) {
-                setFlag(foundFlag);   
-            }
-
-            setIsLoading(false);
-        }, 200);
-        
-    }, [flagID]);
+    const {flag, selectedRule, isLoading, onRuleSelect} = useContext(DetailViewContext)
 
     return (
         // <FlagDetailViewContext>
@@ -93,36 +73,11 @@ export const FlagDetailView = () => {
                                         <DropdownGroup isOpen={false}></DropdownGroup>
                                     </div>
                                     <div>
-                                    <RuleList items={flag.rules} onClick={(rule) => setSelectedRule(rule)}></RuleList>
-                                        
-                                        {/* {flag.rules.map((rule, idx) => {
-                                            return <div style={{display: 'flex', width: '100%', margin: '8px 0px', alignItems: 'center'}} onClick={() => setSelectedRule(rule)}>
-                                                <div style={{margin: '0 8px 0 16px'}}>{idx + 1}</div>
-                                                <div style={{border: '0.5px solid gray',
-                                        borderRadius: '2px',
-                                        padding: '15px 15px 15px 45px',
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        textAlign: 'left'}}>
-                                                    <div>
-                                                        <p style={{margin: '0'}}>{rule.key}</p>
-                                                        <p style={{margin: '0'}}>
-                                                            <span>{rule.status}</span>
-                                                            <span>{rule.type}</span>
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <a href="#" onClick={() => setIsShowingTooltip(!isShowingTooltip)} className="text-dark" style={{fontSize: '1.5rem'}}><svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path></svg></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        })} */}
+                                    <RuleList items={flag.rules}></RuleList>
                                     </div>
                                 </> :
                                 <>
-                                    <div style={{display: 'flex', width: '100%', margin: '8px 0px', paddingTop: '16px'}} onClick={() => setSelectedRule(rule)}>
+                                    <div style={{display: 'flex', width: '100%', margin: '8px 0px', paddingTop: '16px'}} onClick={() => onRuleSelect(rule)}>
                                                 <div style={{margin: '0 8px 0 16px'}}>1</div>
                                                 <div style={{border: '0.5px solid gray',
                                         borderRadius: '2px',
@@ -139,9 +94,9 @@ export const FlagDetailView = () => {
                         </LayoutArea>
                         <LayoutArea area="config">
                         <div style={{height: '100%'}}>
-                            {(!ct.selectedRule) && <div>Select a rule to edit</div>}
+                            {(!selectedRule) && <div>Select a rule to edit</div>}
                             {/* {!flag.rules.length && <div>Add a rule to customize delivery or run an experiment</div>} */}
-                            {ct.selectedRule && <div>
+                            {selectedRule && <div>
                                 <h1>Rule</h1>
 
                                 <div style={{display: 'flex', justifyContent: 'space-between', borderBottom: '0.5px solid gray', paddingBottom: '16px'}}>
@@ -152,7 +107,7 @@ export const FlagDetailView = () => {
                                         </div>
                                         <div style={{textAlign: 'left'}}>
                                             <div>Status</div>
-                                            <div>Draft</div>
+                                            <div>{selectedRule.status}</div>
                                         </div>
                                     </div>
 
@@ -162,13 +117,14 @@ export const FlagDetailView = () => {
                                 </div>
                                 
                                 <div>
-                                    <div>
+                                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
                                         <label htmlFor="name">Name</label>
-                                        <input type="text" id="name"/>
+                                        <input style={{width: '100%'}} type="text" id="name" placeholder={selectedRule.name}/>
                                     </div>
-                                    <div>
+                                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
                                         <label htmlFor="key">Key</label>
-                                        <input type="text" id="key"/>
+                                        <input style={{width: '100%'}} type="text" id="key" placeholder={selectedRule.key} disabled/>
+                                        <small>Rule keys can't be changed after they're created</small>
                                     </div>
 
                                     <div style={{display: 'flex', width: '100%'}}>
