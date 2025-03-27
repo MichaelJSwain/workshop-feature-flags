@@ -5,7 +5,7 @@ export const RuleList = ({items, onClick}) => {
     return (
         <div>
             {items.map((item, idx) => {
-                return <RuleListItem id={idx} index={idx} item={item}/>
+                return <RuleListItem key={item.key} id={idx} index={idx} item={item}/>
             })}
         </div>
     )

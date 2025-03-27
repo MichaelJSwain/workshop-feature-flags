@@ -3,9 +3,8 @@ import { Button } from "../Button/Button"
 import { DetailViewContext } from "../../FlagDetailViewContext.jsx"
 
 export const RuleItemTile = ({rule, ruleKey}) => {
-    const ct = useContext(DetailViewContext)
-    console.log("context = ", ct);
-
+    const {onRuleSelect} = useContext(DetailViewContext)
+    
     return (
         <div style={{border: '0.5px solid gray',
             borderRadius: '2px',
@@ -16,7 +15,7 @@ export const RuleItemTile = ({rule, ruleKey}) => {
             alignItems: 'center',
             textAlign: 'left'}}>
             <div style={{width: '100%'}}>
-                <Button onClick={() => ct.onRuleSelect(rule)} style="unstyled" width="full">
+                <Button onClick={() => onRuleSelect(rule)} style="unstyled" width="full">
                     <p style={{margin: '0'}}>{rule.key}</p>
                     <p style={{margin: '0'}}>
                         <span>{rule.status}</span>
