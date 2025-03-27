@@ -3,6 +3,7 @@ import './App.css'
 import { Header } from './components/Header/Header';
 import { ProjectView } from './pages/ProjectView/ProjectView';
 import { FlagDetailView } from './pages/FlagDetailView/FlagDetailView';
+import { FlagDetailViewContext } from './FlagDetailViewContext';
 
 function App() {
   return (
@@ -13,7 +14,10 @@ function App() {
       <BrowserRouter>
           <Routes>
             <Route path="/flags" element={<ProjectView />}/>
-            <Route path="/flags/:flagID" element={<FlagDetailView />}/>
+            <Route path="/flags/:flagID" element={
+              <FlagDetailViewContext>
+                <FlagDetailView />
+              </FlagDetailViewContext>}/>
             <Route path="*" element={<Navigate to="/flags" replace />}/>
           </Routes>
       </BrowserRouter>
