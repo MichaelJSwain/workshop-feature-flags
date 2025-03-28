@@ -6,6 +6,9 @@ import { Button } from "../../components/Button/Button";
 import { DropdownGroup } from "../../components/DropdownGroup/DropdownGroup";
 import { RuleList } from "../../components/RuleList/RuleList";
 import { DetailViewContext } from "../../FlagDetailViewContext.jsx"
+import { GridLayout } from "../../components/GridLayout/GridLayout.jsx";
+import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.jsx";
+import { Input } from "../../components/Input/Input.jsx";
 
 const dummyData = [{
     name: 'exp 1',
@@ -31,6 +34,11 @@ const dummyData = [{
 
 export const FlagDetailView = () => {
     const {flag, selectedRule, isLoading, onRuleSelect} = useContext(DetailViewContext)
+    const [nameFieldText, setNameFieldText] = useState("");
+
+    const handleInputChange = (e) => {
+        setNameFieldText(e.target.value);
+    }
 
     return (
         // <FlagDetailViewContext>
@@ -117,51 +125,73 @@ export const FlagDetailView = () => {
                                 </div>
                                 
                                 <div>
-                                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '20px'}}>
                                         <label htmlFor="name">Name</label>
-                                        <input style={{width: '100%'}} type="text" id="name" placeholder={selectedRule.name}/>
+                                        <Input type="text" placeholder={selectedRule.name} value={nameFieldText} onChange={(e) =>  handleInputChange(e)}></Input>
+                                        {/* <input style={{width: '100%'}} type="text" id="name" placeholder={selectedRule.name}/> */}
                                     </div>
-                                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left'}}>
+                                    <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '20px'}}>
                                         <label htmlFor="key">Key</label>
                                         <input style={{width: '100%'}} type="text" id="key" placeholder={selectedRule.key} disabled/>
                                         <small>Rule keys can't be changed after they're created</small>
                                     </div>
 
-                                    <div style={{display: 'flex', width: '100%'}}>
-                                        <div style={{width: '100%'}}>
-                                            <div>
+                                    {/* <div style={{display: 'grid', gridTemplateColumns: 'auto 3fr 1fr repeat(2, 0.25fr)', textAlign: 'left', gap: '10px'}}> */}
+                                    <GridLayout columns='auto 3fr 1fr repeat(2, 0.25fr)' gap='10px'>
+                                            <GridLayoutItem columns="1 / 3">
                                                 <span>Variations</span>
-                                            </div>
-                                            <div style={{display: 'flex'}}>
-                                                <div>1</div>
-                                                <div style={{width: '100%'}}>
-                                                    <button style={{width: '100%'}}>Off</button>
-                                                </div>
-                                            </div>
-                                            <div style={{display: 'flex'}}>
-                                                <div>2</div>
-                                                <div style={{width: '100%'}}>
-                                                    <button style={{width: '100%'}}>On</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div>
-                                            <div>
+                                            </GridLayoutItem>
+                                            <GridLayoutItem columns="3 / 6">
                                                 <span>Distribution</span>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <input value="0" style={{width: '50px'}}/>
+                                            </GridLayoutItem>
+                                            <GridLayoutItem columns="1">
+                                                1
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>
+                                                <Button width="full" className="text-left" style="outline" onClick={() => console.log("click")}>
+                                                    <div style={{display: "flex"}}>
+                                                        <div style={{flex: '1'}}>Off</div>
+                                                        <div>\/</div>
+                                                    </div>
+                                                </Button>
+                                            </GridLayoutItem>
+                                          <GridLayoutItem>
+                                                <div style={{display: 'flex'}}>
+                                                    <input value="0" style={{width: 'fit-content'}}/>
+                                                    <span style={{marginLeft: '5px'}}>%</span>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <input value="100%" style={{width: '50px'}}/>
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>
+                                                Delete
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>
+                                                2
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>                                      
+                                                <Button width="full" className="text-left" style="outline" onClick={() => console.log("click")}>
+                                                    <div style={{display: "flex"}}>
+                                                        <div style={{flex: '1'}}>Off</div>
+                                                        <div>\/</div>
+                                                    </div>
+                                                </Button>
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>
+                                                <div style={{display: 'flex'}}>
+                                                    <input value="100%" style={{width: 'fit-content'}}/>
+                                                    <span style={{marginLeft: '5px'}}>%</span>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>
+                                                Delete
+                                            </GridLayoutItem>
+                                            <GridLayoutItem>
+                                                +
+                                            </GridLayoutItem>
+                                    </GridLayout>
+                                     
+                                    {/* </div> */}
                                 </div>
                             </div>}
                         </div>
