@@ -8,6 +8,7 @@ import { RuleList } from "../../components/RuleList/RuleList";
 import { DetailViewContext } from "../../FlagDetailViewContext.jsx"
 import { GridLayout } from "../../components/GridLayout/GridLayout.jsx";
 import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.jsx";
+import { Input } from "../../components/Input/Input.jsx";
 
 const dummyData = [{
     name: 'exp 1',
@@ -33,6 +34,11 @@ const dummyData = [{
 
 export const FlagDetailView = () => {
     const {flag, selectedRule, isLoading, onRuleSelect} = useContext(DetailViewContext)
+    const [nameFieldText, setNameFieldText] = useState("");
+
+    const handleInputChange = (e) => {
+        setNameFieldText(e.target.value);
+    }
 
     return (
         // <FlagDetailViewContext>
@@ -121,7 +127,8 @@ export const FlagDetailView = () => {
                                 <div>
                                     <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '20px'}}>
                                         <label htmlFor="name">Name</label>
-                                        <input style={{width: '100%'}} type="text" id="name" placeholder={selectedRule.name}/>
+                                        <Input type="text" placeholder={selectedRule.name} value={nameFieldText} onChange={(e) =>  handleInputChange(e)}></Input>
+                                        {/* <input style={{width: '100%'}} type="text" id="name" placeholder={selectedRule.name}/> */}
                                     </div>
                                     <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '20px'}}>
                                         <label htmlFor="key">Key</label>
