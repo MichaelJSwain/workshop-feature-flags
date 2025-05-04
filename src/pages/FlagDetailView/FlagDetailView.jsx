@@ -10,28 +10,6 @@ import { GridLayout } from "../../components/GridLayout/GridLayout.jsx";
 import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.jsx";
 import { Input } from "../../components/Input/Input.jsx";
 
-const dummyData = [{
-    name: 'exp 1',
-    key: 'exp_1',
-    rules: [{
-        name: 'rule 1',
-        key: 'rule_1',
-        type: 'a/b',
-        status: 'paused'
-    },
-    {
-        name: 'rule 2',
-        key: 'rule_2',
-        type: 'a/b',
-        status: 'paused'
-    }]
-},
-{
-    name: 'exp 2',
-    key: 'exp_2',
-    rules: []
-}]
-
 export const FlagDetailView = () => {
     const {flag, selectedRule, isLoading, onRuleSelect} = useContext(DetailViewContext)
     const [nameFieldText, setNameFieldText] = useState("");
@@ -78,7 +56,8 @@ export const FlagDetailView = () => {
                                 <>
                                     <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0'}}>
                                         The following rules will be evaluated for all visitors
-                                        <DropdownGroup isOpen={false}></DropdownGroup>
+                                        <Button type="button" style="outline" size="small" onClick={() => setIsShowCreateRuleModal(true)}>Add rule</Button>
+                                        {/* <DropdownGroup isOpen={false}></DropdownGroup> */}
                                     </div>
                                     <div>
                                     <RuleList items={flag.rules}></RuleList>

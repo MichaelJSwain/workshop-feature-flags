@@ -1,27 +1,6 @@
+import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-const dummyData = [{
-    name: 'exp 1',
-    key: 'exp_1',
-    rules: [{
-        name: 'rule 1',
-        key: 'rule_1',
-        type: 'a/b',
-        status: 'paused'
-    },
-    {
-        name: 'rule 2',
-        key: 'rule_2',
-        type: 'a/b',
-        status: 'paused'
-    }]
-},
-{
-    name: 'exp 2',
-    key: 'exp_2',
-    rules: []
-}]
 
 export const DetailViewContext = createContext();
 
@@ -31,20 +10,24 @@ export const FlagDetailViewContext = ({children}) => {
     const [isLoading, setIsLoading] = useState(false);
     const {flagID} = useParams();
 
+    const fetchFlag = async () => {
+        setIsLoading(true);
+        axios.get(`http://localhost:8080/api/26487234/flags/${flagID}`)
+        .then(res => {
+            const fetchedFlag = res.data ? res.data : null;
+            setFlag(fetchedFlag);
+            setIsLoading(false);
+        })
+        .catch(error => {
+            console.log(error);
+            setFlag(null);
+            setIsLoading(false);
+        })
+    }
+
     useEffect(() => {
         setIsLoading(true);
-
-        // fetch data for flag
-        setTimeout(() => {
-            const foundFlag = dummyData.find(item => item.key == flagID);
-
-            if (foundFlag) {
-                setFlag(foundFlag);   
-            }
-
-            setIsLoading(false);
-        }, 200);
-        
+        fetchFlag();
     }, []);
 
     return (
