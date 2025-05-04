@@ -25,13 +25,43 @@ export const FlagDetailViewContext = ({children}) => {
         })
     }
 
+    const addRule = async (rule) => {
+        console.log("adding rule....");
+        const ruleConfig = {
+            ...rule,
+            linkedFlag: flag.key,
+            status: "paused",
+            audience_conditions: "",
+            audience_ids: []
+        }
+
+        axios.post(`http://localhost:8080/api/48923489/rules`, ruleConfig)
+        .then(res => {
+            console.log(res);
+            if (res.data) {
+                const newRule = res.data;
+                const copyFlag = {...flag};
+                copyFlag.rules.push(newRule);
+                setFlag(copyFlag);
+            }
+            // else handle error...
+        })
+        .catch(error => {
+            console.log(error);
+        })
+        // const newRule = 948298490
+        // const copyFlag = {...flag};
+        // copyFlag.rules.push(newRule);
+        // setFlag(copyFlag)
+    }
+
     useEffect(() => {
         setIsLoading(true);
         fetchFlag();
     }, []);
 
     return (
-        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading}}>
+        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule}}>
             {children}
         </DetailViewContext.Provider>
     )
