@@ -117,8 +117,8 @@ export const FlagDetailView = () => {
                     </div>
 
 
-                    {flag.rules.map(rule => {
-                        return <p>rule</p>
+                    { flag.rulesConfigs && flag.rulesConfigs.map(ruleConfig => {
+                        return <p>{ruleConfig.key}</p>
                     })}
                     </>
                     

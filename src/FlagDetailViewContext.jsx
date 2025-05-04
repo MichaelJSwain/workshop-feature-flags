@@ -15,6 +15,7 @@ export const FlagDetailViewContext = ({children}) => {
         axios.get(`http://localhost:8080/api/26487234/flags/${flagID}`)
         .then(res => {
             const fetchedFlag = res.data ? res.data : null;
+            console.log("fetched flag = ", fetchedFlag);
             setFlag(fetchedFlag);
             setIsLoading(false);
         })
@@ -41,7 +42,8 @@ export const FlagDetailViewContext = ({children}) => {
             if (res.data) {
                 const newRule = res.data;
                 const copyFlag = {...flag};
-                copyFlag.rules.push(newRule);
+                copyFlag.rules.push(newRule.key);
+                copyFlag.rulesConfigs.push(newRule);
                 setFlag(copyFlag);
             }
             // else handle error...
