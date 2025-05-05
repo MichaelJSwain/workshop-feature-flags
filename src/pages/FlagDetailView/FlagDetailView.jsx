@@ -11,11 +11,22 @@ import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.j
 import { Input } from "../../components/Input/Input.jsx";
 import { RuleForm } from "../../components/RuleForm/RuleForm.jsx";
 
+const emptyRule = {
+    name: '',
+    key: '',
+    description: '',
+    hypothesis: '',
+    percentage_included: 100,
+    variations: [
+      { name: 'Control', key: 1, variation_id: 2348324, percentage_included: 5000 },
+      { name: 'Variation 1', key: 2, variation_id: 2834908, percentage_included: 50000 }
+    ]
+  }
+
 export const FlagDetailView = () => {
     const {flag, isLoading, onRuleSelect, addRule, updateRule} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
-    const [isShowingCreateRuleForm, setIsShowingCreateRuleForm] = useState(false);
-    const [isShowingUpdateRuleForm, setIsShowingUpdateRuleForm] = useState(false);
+    const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
 
     const handleAddRule = (ruleForme) => {
         // validation logic...
@@ -29,7 +40,13 @@ export const FlagDetailView = () => {
 
         // send validated rule
         console.log("updating rule");
-        updateRule(ruleForm, id);
+        updateRule(ruleForm);
+    }
+
+    const handleRuleFormTrigger = (selectedRule = null) => {
+        console.log("handle rule form trigger with selected rule = ", selectedRule);
+        setSelectedRule(selectedRule);
+        setIsShowingRuleForm(true);
     }
 
     return (
@@ -43,8 +60,8 @@ export const FlagDetailView = () => {
                     
                    
                     <>
-                    <button onClick={() => setIsShowingCreateRuleForm(!isShowingCreateRuleForm)}>Add Rule</button>
-                     {isShowingCreateRuleForm && <RuleForm submitFunc={handleAddRule}></RuleForm>}
+                    <button onClick={() => handleRuleFormTrigger()}>Add Rule</button>
+                     {isShowingRuleForm && <RuleForm initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule}></RuleForm>}
                     {/* <div>
                         <h1>Add new rule</h1>
                         <form onSubmit={handleAddRule}>
@@ -92,11 +109,10 @@ export const FlagDetailView = () => {
 
                     { flag.rulesConfigs && flag.rulesConfigs.map(ruleConfig => {
                         return <p key={Math.random() * 10000} onClick={() => {
-                            setSelectedRule(ruleConfig);
-                            setIsShowingUpdateRuleForm(!isShowingCreateRuleForm);
+                            handleRuleFormTrigger(ruleConfig)
                             }}>{ruleConfig.key}</p>
                     })}
-                    {isShowingUpdateRuleForm && <RuleForm selectedRule={selectedRule} submitFunc={handleUpdateRule}></RuleForm>}
+                    
                     </>
                     
 

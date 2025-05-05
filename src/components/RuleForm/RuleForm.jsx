@@ -1,26 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const RuleForm = ({selectedRule, submitFunc}) => {
-      const [ruleForm, setRuleForm] = useState(selectedRule ? 
-        {
-            name: selectedRule.name,
-            key: selectedRule.key,
-            description: selectedRule.description,
-            hypothesis: selectedRule.hypothesis,
-            percentage_included: selectedRule.percentage_included,
-            variations: selectedRule.variations
-        }
-        : {
-            name: '',
-            key: '',
-            description: '',
-            hypothesis: '',
-            percentage_included: 100,
-            variations: [
-              { name: 'Control', key: 1, variation_id: 2348324, percentage_included: 5000 },
-              { name: 'Variation 1', key: 2, variation_id: 2834908, percentage_included: 50000 }
-            ]
-          });
+export const RuleForm = ({initialValues, submitFunc}) => {
+      const [ruleForm, setRuleForm] = useState(initialValues);
+
+          useEffect(() => {
+            setRuleForm(initialValues)
+          }, [initialValues]);
     
         const handleRuleFormChange = (e) => {
             const { name, value } = e.target;

@@ -51,10 +51,29 @@ export const FlagDetailViewContext = ({children}) => {
         .catch(error => {
             console.log(error);
         })
-        // const newRule = 948298490
-        // const copyFlag = {...flag};
-        // copyFlag.rules.push(newRule);
-        // setFlag(copyFlag)
+    }
+
+    const updateRule = async (updatedRule) => {
+        console.log("update rule");
+
+        axios.patch(`http://localhost:8080/api/48923489/rules`, updatedRule)
+        .then(res => {
+            if (res.ok && result.status === "success") {
+                const {updatedRule} = res.data.data;
+                
+                const updatedRules = flag.rulesConfigs.map(rule => {
+                    return rule.id == updatedRule.id ? updatedRule : rule;
+                })
+                const copyFlag = {...flag, ruleConfigs: updatedRules};
+                setFlag(copyFlag);
+            //   showToast("Rule updated successfully!");
+            } else {
+            //   showError(result.message || "Failed to update rule");
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
     }
 
     useEffect(() => {
@@ -63,7 +82,7 @@ export const FlagDetailViewContext = ({children}) => {
     }, []);
 
     return (
-        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule}}>
+        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, updateRule}}>
             {children}
         </DetailViewContext.Provider>
     )
