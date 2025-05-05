@@ -12,57 +12,80 @@ import { Input } from "../../components/Input/Input.jsx";
 
 export const FlagDetailView = () => {
     const {flag, selectedRule, isLoading, onRuleSelect, addRule} = useContext(DetailViewContext)
-    const [nameFieldText, setNameFieldText] = useState("");
 
-    const [ruleName, setRuleName] = useState("");
-    const [ruleKey, setRuleKey] = useState("");
-    const [ruleHypothesis, setRuleHypothesis] = useState("");
-    const [ruleDescription, setRuleDescription] = useState("");
-    const [rulePercentage, setRulePercentage] = useState("");
-
-    const handleInputChange = (e) => {
-        setNameFieldText(e.target.value);
-    }
+    const [ruleForm, setRuleForm] = useState({
+        name: '',
+        key: '',
+        description: '',
+        hypothesis: '',
+        percentageIncluded: 100,
+        variations: [
+          { name: 'Control', key: 1, variationId: 2348324, percentageIncluded: 5000 },
+          { name: 'Variation 1', key: 2, variationId: 2834908, percentageIncluded: 50000 }
+        ]
+      });
 
     const handleRuleFormChange = (e) => {
-        if (e.target.id === "name") {
-            setRuleName(e.target.value);
-        } else if (e.target.id === "key") {
-            setRuleKey(e.target.value);
-        } else if (e.target.id === "description") {
-            setRuleDescription(e.target.value);
-        } else if (e.target.id === "hypothesis") {
-            setRuleHypothesis(e.target.value);
-        } else if (e.target.id === "percentage") {
-            setRulePercentage(e.target.value);
+        const { name, value } = e.target;
+        setRuleForm(prev => ({
+          ...prev,
+          [name]: value
+        }));
+    }
+
+    const updateVariation = (index, field, value) => {
+        const updatedVariations = [...ruleForm.variations];
+        updatedVariations[index][field] = value;
+        setRuleForm(prev => ({
+            ...prev,
+            variations: updatedVariations
+        }));
+    };
+
+    const getTrafficAllocationPerVariant = (totalTrafficAllocation, variants) => {
+        const splitPerVariant = Math.trunc(totalTrafficAllocation / variants.length);
+        let remainder;
+        if (splitPerVariant * variants.length == totalTrafficAllocation) {
+            remainder = false;
+        } else {
+            remainder = totalTrafficAllocation - (splitPerVariant * (variants.length - 1));
         }
+      
+        const variantsWithTrafficAllocation = variants.map((variant, idx) => {
+            return {
+                ...variant,
+                percentageIncluded: !remainder || idx != (variants.length - 1) ? splitPerVariant : remainder
+            }
+        });
+        return variantsWithTrafficAllocation;
+      };
+
+    const addVariation = () => {
+        const newVariation = {
+            name: `Variation ${ruleForm.variations.length}`,
+            key: ruleForm.variations.length + 1,
+            variationId: Math.ceil(Math.random() * 100000)
+        }
+        const updatedVariations = getTrafficAllocationPerVariant(10000, [...ruleForm.variations, newVariation]);
+        const updatedForm = {...ruleForm, variations: updatedVariations};
+        setRuleForm(updatedForm);
+    }
+
+    const deleteVariation = (selectedVariationIndex) => {
+        const filteredVariations = ruleForm.variations.filter((variation, index) => {
+            return index != selectedVariationIndex;
+        });
+        const updatedVariations = getTrafficAllocationPerVariant(10000, filteredVariations);
+        const updatedForm = {...ruleForm, variations: updatedVariations};
+        setRuleForm(updatedForm);
     }
 
     const handleAddRule = (e) => {
         e.preventDefault();
-        const placeholderVariants = [
-            {
-                name: "control",
-                key: "Control",
-                variation_id: 24830,
-                percentage_included: 5000
-            },
-            {
-                name: "v1",
-                key: "V1",
-                variation_id: 98247,
-                percentage_included: 5000
-            }
-        ]
-        const rule = {
-            key: ruleKey,
-            name: ruleName,
-            hypothesis: ruleHypothesis,
-            description: ruleDescription,
-            percentage_included: rulePercentage,
-            variants: placeholderVariants,
-        }
-        addRule(rule);
+        // validation logic...
+
+        // send validated rule
+        addRule(ruleForm);
     }
 
     return (
@@ -80,45 +103,48 @@ export const FlagDetailView = () => {
                         <form onSubmit={handleAddRule}>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="name">Rule name:</label>
-                                <input type="text" id="name" onChange={handleRuleFormChange} value={ruleName}/>
+                                <input type="text" id="name" name="name" onChange={handleRuleFormChange} value={ruleForm.name}/>
                             </fieldset>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="key">Rule key:</label>
-                                <input type="text" id="key" onChange={handleRuleFormChange} value={ruleKey}/>
+                                <input type="text" id="key" name="key" onChange={handleRuleFormChange} value={ruleForm.key}/>
                             </fieldset>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="hypothesis">Rule hypothesis:</label>
-                                <input type="text" id="hypothesis" onChange={handleRuleFormChange} value={ruleHypothesis}/>
+                                <input type="text" id="hypothesis" name="hypothesis" onChange={handleRuleFormChange} value={ruleForm.hypothesis}/>
                             </fieldset>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="description">Rule description:</label>
-                                <input type="text" id="description" onChange={handleRuleFormChange} value={ruleDescription}/>
+                                <input type="text" id="description" name="description" onChange={handleRuleFormChange} value={ruleForm.description}/>
                             </fieldset>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="percentage">Percentage included:</label>
-                                <input type="text" id="percentage" onChange={handleRuleFormChange} value={rulePercentage}/>
+                                <input type="text" id="percentage" name="percentageIncluded" onChange={handleRuleFormChange} value={ruleForm.percentageIncluded}/>
                             </fieldset>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="variants">Variants:</label>
                                 <div style={{display: "flex", flexDirection: "column"}}>
-                                    <div>
-                                        <input type="text" id="variants" value="Control" disabled/>
-                                        <span>50%</span>
-                                    </div>
-                                    <div>
-                                     <input type="text" id="variants" value="Variation 1" disabled/>
-                                        <span>50%</span>
-                                    </div>
+                                    {ruleForm.variations.map((variation, index) => {
+                                        return <div key={index}>
+                                                <input type="text" value={variation.name} onChange={(e) => updateVariation(index, "name", e.target.value)}/>
+                                                <span>
+                                                    <input type="number" onChange={(e) => updateVariation(index, "percentageIncluded", e.target.value)} value={variation.percentageIncluded}/>
+                                                    %
+                                                </span>
+                                                {ruleForm.variations.length > 2 && <button onClick={() => deleteVariation(index)}>Delete</button>}
+                                            </div>
+                                    })}
                                 </div>
+                                <button type="button" onClick={addVariation}>+ Add variation</button>
                             </fieldset>
 
-                            <button>Save</button>
+                            <button type="submit">Save</button>
                         </form>
                     </div>
 
 
                     { flag.rulesConfigs && flag.rulesConfigs.map(ruleConfig => {
-                        return <p>{ruleConfig.key}</p>
+                        return <p key={ruleConfig.id}>{ruleConfig.key}</p>
                     })}
                     </>
                     
