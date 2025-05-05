@@ -18,10 +18,10 @@ export const FlagDetailView = () => {
         key: '',
         description: '',
         hypothesis: '',
-        percentageIncluded: 100,
+        percentage_included: 100,
         variations: [
-          { name: 'Control', key: 1, variationId: 2348324, percentageIncluded: 5000 },
-          { name: 'Variation 1', key: 2, variationId: 2834908, percentageIncluded: 50000 }
+          { name: 'Control', key: 1, variation_id: 2348324, percentage_included: 5000 },
+          { name: 'Variation 1', key: 2, variation_id: 2834908, percentage_included: 50000 }
         ]
       });
 
@@ -54,7 +54,7 @@ export const FlagDetailView = () => {
         const variantsWithTrafficAllocation = variants.map((variant, idx) => {
             return {
                 ...variant,
-                percentageIncluded: !remainder || idx != (variants.length - 1) ? splitPerVariant : remainder
+                percentage_included: !remainder || idx != (variants.length - 1) ? splitPerVariant : remainder
             }
         });
         return variantsWithTrafficAllocation;
@@ -64,7 +64,7 @@ export const FlagDetailView = () => {
         const newVariation = {
             name: `Variation ${ruleForm.variations.length}`,
             key: ruleForm.variations.length + 1,
-            variationId: Math.ceil(Math.random() * 100000)
+            variation_id: Math.ceil(Math.random() * 100000)
         }
         const updatedVariations = getTrafficAllocationPerVariant(10000, [...ruleForm.variations, newVariation]);
         const updatedForm = {...ruleForm, variations: updatedVariations};
@@ -119,7 +119,7 @@ export const FlagDetailView = () => {
                             </fieldset>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="percentage">Percentage included:</label>
-                                <input type="text" id="percentage" name="percentageIncluded" onChange={handleRuleFormChange} value={ruleForm.percentageIncluded}/>
+                                <input type="text" id="percentage" name="percentage_included" onChange={handleRuleFormChange} value={ruleForm.percentage_included}/>
                             </fieldset>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
                                 <label htmlFor="variants">Variants:</label>
@@ -128,7 +128,7 @@ export const FlagDetailView = () => {
                                         return <div key={index}>
                                                 <input type="text" value={variation.name} onChange={(e) => updateVariation(index, "name", e.target.value)}/>
                                                 <span>
-                                                    <input type="number" onChange={(e) => updateVariation(index, "percentageIncluded", e.target.value)} value={variation.percentageIncluded}/>
+                                                    <input type="number" onChange={(e) => updateVariation(index, "percentage_included", e.target.value)} value={variation.percentage_included}/>
                                                     %
                                                 </span>
                                                 {ruleForm.variations.length > 2 && <button onClick={() => deleteVariation(index)}>Delete</button>}
