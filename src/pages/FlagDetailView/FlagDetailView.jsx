@@ -9,83 +9,27 @@ import { DetailViewContext } from "../../FlagDetailViewContext.jsx"
 import { GridLayout } from "../../components/GridLayout/GridLayout.jsx";
 import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.jsx";
 import { Input } from "../../components/Input/Input.jsx";
+import { RuleForm } from "../../components/RuleForm/RuleForm.jsx";
 
 export const FlagDetailView = () => {
-    const {flag, selectedRule, isLoading, onRuleSelect, addRule} = useContext(DetailViewContext)
+    const {flag, isLoading, onRuleSelect, addRule, updateRule} = useContext(DetailViewContext);
+    const [selectedRule, setSelectedRule] = useState(null);
+    const [isShowingCreateRuleForm, setIsShowingCreateRuleForm] = useState(false);
+    const [isShowingUpdateRuleForm, setIsShowingUpdateRuleForm] = useState(false);
 
-    const [ruleForm, setRuleForm] = useState({
-        name: '',
-        key: '',
-        description: '',
-        hypothesis: '',
-        percentage_included: 100,
-        variations: [
-          { name: 'Control', key: 1, variation_id: 2348324, percentage_included: 5000 },
-          { name: 'Variation 1', key: 2, variation_id: 2834908, percentage_included: 50000 }
-        ]
-      });
-
-    const handleRuleFormChange = (e) => {
-        const { name, value } = e.target;
-        setRuleForm(prev => ({
-          ...prev,
-          [name]: value
-        }));
-    }
-
-    const updateVariation = (index, field, value) => {
-        const updatedVariations = [...ruleForm.variations];
-        updatedVariations[index][field] = value;
-        setRuleForm(prev => ({
-            ...prev,
-            variations: updatedVariations
-        }));
-    };
-
-    const getTrafficAllocationPerVariant = (totalTrafficAllocation, variants) => {
-        const splitPerVariant = Math.trunc(totalTrafficAllocation / variants.length);
-        let remainder;
-        if (splitPerVariant * variants.length == totalTrafficAllocation) {
-            remainder = false;
-        } else {
-            remainder = totalTrafficAllocation - (splitPerVariant * (variants.length - 1));
-        }
-      
-        const variantsWithTrafficAllocation = variants.map((variant, idx) => {
-            return {
-                ...variant,
-                percentage_included: !remainder || idx != (variants.length - 1) ? splitPerVariant : remainder
-            }
-        });
-        return variantsWithTrafficAllocation;
-      };
-
-    const addVariation = () => {
-        const newVariation = {
-            name: `Variation ${ruleForm.variations.length}`,
-            key: ruleForm.variations.length + 1,
-            variation_id: Math.ceil(Math.random() * 100000)
-        }
-        const updatedVariations = getTrafficAllocationPerVariant(10000, [...ruleForm.variations, newVariation]);
-        const updatedForm = {...ruleForm, variations: updatedVariations};
-        setRuleForm(updatedForm);
-    }
-
-    const deleteVariation = (selectedVariationIndex) => {
-        const filteredVariations = ruleForm.variations.filter((variation, index) => {
-            return index != selectedVariationIndex;
-        });
-        const updatedVariations = getTrafficAllocationPerVariant(10000, filteredVariations);
-        const updatedForm = {...ruleForm, variations: updatedVariations};
-        setRuleForm(updatedForm);
-    }
-
-    const handleAddRule = (e) => {
-        e.preventDefault();
+    const handleAddRule = (ruleForme) => {
         // validation logic...
 
         // send validated rule
-        addRule(ruleForm);
+        addRule(ruleForme);
+    }
+
+    const handleUpdateRule = (ruleForm, id) => {
+        // validation logic...
+
+        // send validated rule
+        console.log("updating rule");
+        updateRule(ruleForm, id);
     }
 
     return (
@@ -97,8 +41,11 @@ export const FlagDetailView = () => {
                 
                 {(!isLoading && flag) && 
                     
+                   
                     <>
-                    <div>
+                    <button onClick={() => setIsShowingCreateRuleForm(!isShowingCreateRuleForm)}>Add Rule</button>
+                     {isShowingCreateRuleForm && <RuleForm submitFunc={handleAddRule}></RuleForm>}
+                    {/* <div>
                         <h1>Add new rule</h1>
                         <form onSubmit={handleAddRule}>
                             <fieldset style={{display: "flex", flexDirection: "column"}}>
@@ -140,12 +87,16 @@ export const FlagDetailView = () => {
 
                             <button type="submit">Save</button>
                         </form>
-                    </div>
+                    </div> */}
 
 
                     { flag.rulesConfigs && flag.rulesConfigs.map(ruleConfig => {
-                        return <p key={ruleConfig.id}>{ruleConfig.key}</p>
+                        return <p key={Math.random() * 10000} onClick={() => {
+                            setSelectedRule(ruleConfig);
+                            setIsShowingUpdateRuleForm(!isShowingCreateRuleForm);
+                            }}>{ruleConfig.key}</p>
                     })}
+                    {isShowingUpdateRuleForm && <RuleForm selectedRule={selectedRule} submitFunc={handleUpdateRule}></RuleForm>}
                     </>
                     
 
