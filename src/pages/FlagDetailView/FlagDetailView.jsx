@@ -24,7 +24,7 @@ const emptyRule = {
   }
 
 export const FlagDetailView = () => {
-    const {flag, isLoading, onRuleSelect, addRule, updateRule} = useContext(DetailViewContext);
+    const {flag, isLoading, onRuleSelect, addRule, updateRule, deleteRule} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
     const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
 
@@ -47,6 +47,10 @@ export const FlagDetailView = () => {
         console.log("handle rule form trigger with selected rule = ", selectedRule);
         setSelectedRule(selectedRule);
         setIsShowingRuleForm(true);
+    }
+    
+    const handleDeleteRule = (ruleId) => {
+        deleteRule(ruleId)
     }
 
     return (
@@ -108,9 +112,14 @@ export const FlagDetailView = () => {
 
 
                     { flag.rulesConfigs && flag.rulesConfigs.map(ruleConfig => {
-                        return <p key={Math.random() * 10000} onClick={() => {
+                        return <div key={Math.random() * 10000} >
+                                <span onClick={() => {
                             handleRuleFormTrigger(ruleConfig)
-                            }}>{ruleConfig.key}</p>
+                            }}>{ruleConfig.key}</span>
+                                <span>
+                                    <button type="button" onClick={() => handleDeleteRule(ruleConfig.id)}>Delete</button>
+                                </span>
+                            </div>
                     })}
                     
                     </>

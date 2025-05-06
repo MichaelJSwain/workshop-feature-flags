@@ -76,13 +76,24 @@ export const FlagDetailViewContext = ({children}) => {
         })
     }
 
+    const deleteRule = async (ruleId) => {
+        
+        axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}/rules/${ruleId}`)
+        .then(res => {
+            
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
     useEffect(() => {
         setIsLoading(true);
         fetchFlag();
     }, []);
 
     return (
-        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, updateRule}}>
+        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, updateRule, deleteRule}}>
             {children}
         </DetailViewContext.Provider>
     )
