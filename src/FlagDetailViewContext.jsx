@@ -11,6 +11,7 @@ export const FlagDetailViewContext = ({children}) => {
     const {flagID} = useParams();
 
     const fetchFlag = async () => {
+        console.log("fetching flag...");
         setIsLoading(true);
         axios.get(`http://localhost:8080/api/26487234/flags/${flagID}`)
         .then(res => {
@@ -40,11 +41,7 @@ export const FlagDetailViewContext = ({children}) => {
         .then(res => {
             console.log(res);
             if (res.data) {
-                const newRule = res.data;
-                const copyFlag = {...flag};
-                copyFlag.rules.push(newRule.key);
-                copyFlag.rulesConfigs.push(newRule);
-                setFlag(copyFlag);
+                fetchFlag();
             }
             // else handle error...
         })
@@ -58,18 +55,24 @@ export const FlagDetailViewContext = ({children}) => {
 
         axios.patch(`http://localhost:8080/api/48923489/rules`, updatedRule)
         .then(res => {
-            if (res.ok && result.status === "success") {
-                const {updatedRule} = res.data.data;
-                
-                const updatedRules = flag.rulesConfigs.map(rule => {
-                    return rule.id == updatedRule.id ? updatedRule : rule;
-                })
-                const copyFlag = {...flag, ruleConfigs: updatedRules};
-                setFlag(copyFlag);
-            //   showToast("Rule updated successfully!");
+            console.log("patch res = ", res)
+            
+            if (res.data.status === "success") {
+                fetchFlag();
             } else {
             //   showError(result.message || "Failed to update rule");
             }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
+    const deleteRule = async (ruleId) => {
+        
+        axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}/rules/${ruleId}`)
+        .then(res => {
+            fetchFlag();
         })
         .catch(error => {
             console.log(error);
@@ -82,7 +85,7 @@ export const FlagDetailViewContext = ({children}) => {
     }, []);
 
     return (
-        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, updateRule}}>
+        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, updateRule, deleteRule}}>
             {children}
         </DetailViewContext.Provider>
     )
