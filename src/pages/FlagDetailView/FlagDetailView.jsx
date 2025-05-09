@@ -66,13 +66,54 @@ export const FlagDetailView = () => {
                      {isShowingRuleForm && <RuleForm initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule}></RuleForm>}
 
                     { flag.rulesConfigs && flag.rulesConfigs.map(ruleConfig => {
-                        return <div key={Math.random() * 10000} >
-                                <span onClick={() => {
-                            handleRuleFormTrigger(ruleConfig)
-                            }}>{ruleConfig.key}</span>
-                                <span>
-                                    <button type="button" onClick={() => handleDeleteRule(ruleConfig.id)}>Delete</button>
-                                </span>
+                        return <div key={Math.random() * 10000} style={{borderRadius: "8px", border: "1px solid gray", marginBottom: "20px", padding: "30px"}}>
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <div style={{display: "flex", gap: "10px"}}>
+                                        <h2 style={{margin: "0px"}}>Rule: {ruleConfig.name}</h2>
+                                        <div style={{background: ruleConfig.status === "paused" ? "pink" : "green", color: "white", fontWeight: "bold", padding: "5px 10px", borderRadius: "25px", display: "flex", alignItems: "center"}}>
+                                            {ruleConfig.status}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="button" onClick={() => {handleRuleFormTrigger(ruleConfig)}}>Update</button>
+                                        <button type="button" onClick={() => handleDeleteRule(ruleConfig.id)}>Delete</button>
+                                    </div>
+                                </div>
+                                <div style={{display: "flex"}}>
+                                    <div>
+                                        Key:
+                                    </div>
+                                    <div>
+                                        {ruleConfig.key}
+                                    </div>
+                                </div>
+                                <div style={{display: "flex"}}>
+                                    <div>
+                                        Traffic Allocation:
+                                    </div>
+                                    <div>
+                                        {ruleConfig.percentage_included}
+                                        %
+                                    </div>
+                                </div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>Variation:</td>
+                                            <td>Distribution:</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {ruleConfig.variations.map(v => {
+                                        return ( 
+                                            <tr key={v.variation_id}>
+                                                <td>{v.name}</td>
+                                                <td>{v.percentage_included}%</td>
+                                            </tr>
+                                        )
+                                    })}
+                                    </tbody>
+                                </table>
                             </div>
                     })}
                     </>
