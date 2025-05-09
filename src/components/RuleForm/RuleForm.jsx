@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const RuleForm = ({initialValues, submitFunc}) => {
+export const RuleForm = ({initialValues, submitFunc, closeFunc}) => {
       const [ruleForm, setRuleForm] = useState(initialValues);
 
           useEffect(() => {
@@ -68,48 +68,59 @@ export const RuleForm = ({initialValues, submitFunc}) => {
     }
     
     return (
-        <div>
-            <h1>Add new rule</h1>
-            <form onSubmit={handleSubmit}>
-                <fieldset style={{display: "flex", flexDirection: "column"}}>
-                    <label htmlFor="name">Rule name:</label>
-                    <input type="text" id="name" name="name" onChange={handleRuleFormChange} value={ruleForm.name}/>
-                </fieldset>
-                <fieldset style={{display: "flex", flexDirection: "column"}}>
-                    <label htmlFor="key">Rule key:</label>
-                    <input type="text" id="key" name="key" onChange={handleRuleFormChange} value={ruleForm.key}/>
-                </fieldset>
-                <fieldset style={{display: "flex", flexDirection: "column"}}>
-                    <label htmlFor="hypothesis">Rule hypothesis:</label>
-                    <input type="text" id="hypothesis" name="hypothesis" onChange={handleRuleFormChange} value={ruleForm.hypothesis}/>
-                </fieldset>
-                <fieldset style={{display: "flex", flexDirection: "column"}}>
-                    <label htmlFor="description">Rule description:</label>
-                    <input type="text" id="description" name="description" onChange={handleRuleFormChange} value={ruleForm.description}/>
-                </fieldset>
-                <fieldset style={{display: "flex", flexDirection: "column"}}>
-                    <label htmlFor="percentage">Percentage included:</label>
-                    <input type="text" id="percentage" name="percentage_included" onChange={handleRuleFormChange} value={ruleForm.percentage_included}/>
-                </fieldset>
-                <fieldset style={{display: "flex", flexDirection: "column"}}>
-                    <label htmlFor="variants">Variants:</label>
-                    <div style={{display: "flex", flexDirection: "column"}}>
-                        {ruleForm.variations.map((variation, index) => {
-                            return <div key={index}>
-                                    <input type="text" value={variation.name} onChange={(e) => updateVariation(index, "name", e.target.value)}/>
-                                    <span>
-                                        <input type="number" onChange={(e) => updateVariation(index, "percentage_included", e.target.value)} value={variation.percentage_included}/>
-                                        %
-                                    </span>
-                                    {ruleForm.variations.length > 2 && <button onClick={() => deleteVariation(index)}>Delete</button>}
-                                </div>
-                        })}
+        <div style={{position: "fixed", top: "0px", left: "0px", width: "100vw", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <div style={{position: "absolute", width: "100%", height: "100%", background: "rgba(255,255,255, .5)"}}></div>
+            <div style={{maxWidth: "500px", zIndex: "9", border: "1px solid black", padding: "20px", height: "80vh", overflow: "scroll", background: "white"}}>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <h1>Add new rule</h1>
+                    <button type="button" onClick={closeFunc} style={{background: "gray"}}>
+                        X
+                    </button>
+                </div>
+                <form onSubmit={handleSubmit}>
+                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                        <label htmlFor="name" style={{textAlign: "left"}}>Rule name:</label>
+                        <input type="text" id="name" name="name" onChange={handleRuleFormChange} value={ruleForm.name}/>
+                    </fieldset>
+                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                        <label htmlFor="key" style={{textAlign: "left"}}>Rule key:</label>
+                        <input type="text" id="key" name="key" onChange={handleRuleFormChange} value={ruleForm.key}/>
+                    </fieldset>
+                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                        <label htmlFor="hypothesis" style={{textAlign: "left"}}>Rule hypothesis:</label>
+                        <input type="text" id="hypothesis" name="hypothesis" onChange={handleRuleFormChange} value={ruleForm.hypothesis}/>
+                    </fieldset>
+                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                        <label htmlFor="description" style={{textAlign: "left"}}>Rule description:</label>
+                        <input type="text" id="description" name="description" onChange={handleRuleFormChange} value={ruleForm.description}/>
+                    </fieldset>
+                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                        <label htmlFor="percentage" style={{textAlign: "left"}}>Percentage included:</label>
+                        <input type="text" id="percentage" name="percentage_included" onChange={handleRuleFormChange} value={ruleForm.percentage_included}/>
+                    </fieldset>
+                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                        <label htmlFor="variants" style={{textAlign: "left"}}>Variants:</label>
+                        <div style={{display: "flex", flexDirection: "column", marginBottom: "10px"}}>
+                            {ruleForm.variations.map((variation, index) => {
+                                return <div key={index}>
+                                        <input type="text" value={variation.name} onChange={(e) => updateVariation(index, "name", e.target.value)}/>
+                                        <span>
+                                            <input type="number" onChange={(e) => updateVariation(index, "percentage_included", e.target.value)} value={variation.percentage_included}/>
+                                            %
+                                        </span>
+                                        {ruleForm.variations.length > 2 && <button onClick={() => deleteVariation(index)}>Delete</button>}
+                                    </div>
+                            })}
+                        </div>
+                        <button type="button" onClick={addVariation}>+ Add variation</button>
+                    </fieldset>
+                    
+                    <div style={{display: "flex", justifyContent: "flex-end", gap: "10px", margin: "20px 0"}}>
+                        <button type="button" onClick={closeFunc}>Cancel</button>
+                        <button type="submit">Save</button>
                     </div>
-                    <button type="button" onClick={addVariation}>+ Add variation</button>
-                </fieldset>
-
-                <button type="submit">Save</button>
-            </form>
+                </form>
+            </div>
         </div>
     )
 }

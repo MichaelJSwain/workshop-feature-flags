@@ -85,7 +85,7 @@ export const FlagDetailView = () => {
                         </div>
                     </div>
 
-                     {isShowingRuleForm && <RuleForm initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule}></RuleForm>}
+                     {isShowingRuleForm && <RuleForm initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule} closeFunc={() => setIsShowingRuleForm(false)}></RuleForm>}
                      <div style={{border: "1px solid black", padding: "20px 30px"}}>
                     <div style={{display: "flex", justifyContent: "space-between", marginBottom: "20px"}}>
                         <h2 style={{textAlign: "left", margin: "0px"}}>Rules</h2>
