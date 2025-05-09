@@ -63,6 +63,28 @@ export const FlagDetailView = () => {
                 {(!isLoading && flag) && 
                     <>
                     
+                    <div style={{textAlign: "left", margin: "20px 20px 40px"}}>
+                        <div style={{display: "flex", justifyContent: "space-between"}}>
+                            <div>
+                            <div style={{display: "flex"}}>
+                                <h1 style={{margin: "0px", marginRight: "10px"}}>{flag.name}</h1>
+                                <div style={{background: flag.status === "paused" ? "pink" : "green", color: "white", fontWeight: "bold", padding: "5px 10px", borderRadius: "25px", display: "flex", alignItems: "center"}}>
+                                    {flag.status}
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    Key: {flag.key}
+                                </div>
+                                <div>
+                                    Project ID: {flag.project_id}
+                                </div>
+                            </div>
+                            </div>
+                            <button style={{height: "fit-content"}}>{flag.status === "running" ? "Pause" : "Start"}</button>
+                        </div>
+                    </div>
+
                      {isShowingRuleForm && <RuleForm initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule}></RuleForm>}
                      <div style={{border: "1px solid black", padding: "20px 30px"}}>
                     <div style={{display: "flex", justifyContent: "space-between", marginBottom: "20px"}}>
