@@ -59,8 +59,30 @@ export const toggleFlagStatus = async () => {
 
 }
 
-export const deleteFlag = async () => {
+export const deleteFlag = async (flagID) => {
+    try {
+        const res = await axios.delete(`http://localhost:8080/api/48923489/flags/${flagID}`);
+        const deletedFlag = res.data;
 
+        if (!deletedFlag) {
+            return null
+        }
+
+        return deletedFlag;
+    } catch(error) {
+          console.log("Error deleting flag:", error);
+        // throw error
+        return null; 
+    }
+
+    // .then(res => {
+    //     console.log(res);
+    //     // update ui
+    //     setFlags(res.data);
+    // })
+    // .catch(error => {
+    //     console.log(error.message);
+    // })
 }
 
 export const createRule = async (rule) => {

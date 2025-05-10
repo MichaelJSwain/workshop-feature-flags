@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { TableRow } from '../../components/TableRow';
 import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
-import { createFlag, fetchFlags } from '../../services/flagService';
+import { createFlag, deleteFlag, fetchFlags } from '../../services/flagService';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -82,16 +82,18 @@ export const ProjectView = () => {
         getFlags();
     }
 
-    const handleDeleteFlag = (flag) => {
-        axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}`)
-        .then(res => {
-            console.log(res);
-            // update ui
-            setFlags(res.data);
-        })
-        .catch(error => {
-            console.log(error.message);
-        })
+    const handleDeleteFlag = async (flag) => {
+        setIsLoading(true);
+        const deletedFlag = await deleteFlag(flag.id);
+        
+        if (!deletedFlag) {
+              // show error message to user if the flag wasn't deleted
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
+
+        setIsLoading(false);
+        getFlags();
     }
 
     const handleFilterFlags = () => {
