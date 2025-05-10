@@ -57,22 +57,26 @@ export const createRule = async (rule) => {
 
 }
 
-export const updateRule = async (updatedRule) => {
-    // console.log("update rule");
+export const updateRule = async (rule) => {
+    console.log("updating rule...");
 
-    // axios.patch(`http://localhost:8080/api/48923489/rules`, updatedRule)
-    // .then(res => {
-    //     console.log("patch res = ", res)
+    try {
+        const res = await axios.patch(`http://localhost:8080/api/48923489/rules`, rule);
+        const updatedRule = res.data;
+        console.log("updatedRule", res);
+
+
+        if (!updatedRule) {
+            // successful request with no data returned
+            return null;
+        }
         
-    //     if (res.data.status === "success") {
-    //         fetchFlag();
-    //     } else {
-    //     //   showError(result.message || "Failed to update rule");
-    //     }
-    // })
-    // .catch(error => {
-    //     console.log(error);
-    // })
+        return updatedRule;
+    } catch(error) {
+        console.log("Error updating rule:", error);
+        // throw error
+        return null; 
+    }
 }
 
 export const deleteRule = async (ruleId) => {

@@ -24,7 +24,7 @@ const emptyRule = {
   }
 
 export const FlagDetailView = () => {
-    const {flag, isLoading, onRuleSelect, addRule, updateRule, deleteRule} = useContext(DetailViewContext);
+    const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, deleteRule} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
     const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
 
@@ -41,7 +41,7 @@ export const FlagDetailView = () => {
 
         // send validated rule
         console.log("updating rule");
-        updateRule(ruleForm);
+        onRuleUpdate(ruleForm);
         setIsShowingRuleForm(false);
     }
 

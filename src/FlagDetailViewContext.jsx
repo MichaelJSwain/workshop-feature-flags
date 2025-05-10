@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { createRule, fetchFlag } from "./services/flagService";
+import { createRule, fetchFlag, updateRule } from "./services/flagService";
 import axios from "axios";
 
 export const DetailViewContext = createContext();
@@ -42,29 +42,28 @@ export const FlagDetailViewContext = ({children}) => {
             // e.g. setIsShowingMessage(true)
             // ...
         }
-        
+
         setIsLoading(false);
 
         // fetch latest flag data with new rule
         getFlag();
     }
 
-    const updateRule = async (updatedRule) => {
-        console.log("update rule");
+    const onRuleUpdate = async (rule) => {
+        setIsLoading(true);
+        const res = await updateRule(rule);
+        const updatedRule = res.data;
+        
+        if (!updatedRule) {
+             // show error message to user if the rule was not updated
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
 
-        axios.patch(`http://localhost:8080/api/48923489/rules`, updatedRule)
-        .then(res => {
-            console.log("patch res = ", res)
-            
-            if (res.data.status === "success") {
-                getFlag();
-            } else {
-            //   showError(result.message || "Failed to update rule");
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        setIsLoading(false);
+        
+        // fetch latest flag data with new rule
+        getFlag();
     }
 
     const deleteRule = async (ruleId) => {
@@ -83,7 +82,7 @@ export const FlagDetailViewContext = ({children}) => {
     }, []);
 
     return (
-        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, updateRule, deleteRule}}>
+        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, onRuleUpdate, deleteRule}}>
             {children}
         </DetailViewContext.Provider>
     )
