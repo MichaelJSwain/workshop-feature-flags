@@ -1,6 +1,7 @@
-import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { fetchFlag } from "./services/flagService";
+import axios from "axios";
 
 export const DetailViewContext = createContext();
 
@@ -10,21 +11,18 @@ export const FlagDetailViewContext = ({children}) => {
     const [isLoading, setIsLoading] = useState(false);
     const {flagID} = useParams();
 
-    const fetchFlag = async () => {
-        console.log("fetching flag...");
+    const getFlag = async () => {
         setIsLoading(true);
-        axios.get(`http://localhost:8080/api/26487234/flags/${flagID}`)
-        .then(res => {
-            const fetchedFlag = res.data ? res.data : null;
-            console.log("fetched flag = ", fetchedFlag);
-            setFlag(fetchedFlag);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            console.log(error);
-            setFlag(null);
-            setIsLoading(false);
-        })
+        const fetchedFlag = await fetchFlag(flagID);
+        
+        if (!fetchedFlag) {
+            // show error message to user if no flag was returned
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
+
+        setFlag(fetchedFlag);
+        setIsLoading(false);
     }
 
     const addRule = async (rule) => {
@@ -41,7 +39,7 @@ export const FlagDetailViewContext = ({children}) => {
         .then(res => {
             console.log(res);
             if (res.data) {
-                fetchFlag();
+                getFlag();
             }
             // else handle error...
         })
@@ -58,7 +56,7 @@ export const FlagDetailViewContext = ({children}) => {
             console.log("patch res = ", res)
             
             if (res.data.status === "success") {
-                fetchFlag();
+                getFlag();
             } else {
             //   showError(result.message || "Failed to update rule");
             }
@@ -72,7 +70,7 @@ export const FlagDetailViewContext = ({children}) => {
         
         axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}/rules/${ruleId}`)
         .then(res => {
-            fetchFlag();
+            getFlag();
         })
         .catch(error => {
             console.log(error);
@@ -80,8 +78,7 @@ export const FlagDetailViewContext = ({children}) => {
     }
 
     useEffect(() => {
-        setIsLoading(true);
-        fetchFlag();
+        getFlag();
     }, []);
 
     return (
