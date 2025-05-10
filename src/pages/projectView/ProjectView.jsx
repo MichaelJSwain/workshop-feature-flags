@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { TableRow } from '../../components/TableRow';
 import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
+import { fetchFlags } from '../../services/flagService';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -18,20 +19,19 @@ export const ProjectView = () => {
     const [isShowingModal, setIsShowingModal] = useState(false);
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
 
-    const fetchFlags = () => {
+    const getFlags = async () => {
         setIsLoading(true);
-        axios.get('http://localhost:8080/api/26487234/flags')
-        .then(res => {
-            const fetchedFlags = res.data?.length ? res.data : [];
-            setFlags(fetchedFlags);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            console.log(error);
-            setFlags([]);
-            setIsLoading(false);
-        })
-    };
+        const fetchedFlags = await fetchFlags();
+         
+        if (!fetchedFlags) {
+            // show error message to user if no flags were returned
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
+
+        setFlags(fetchedFlags);
+        setIsLoading(false);
+    }
 
     const onExperimentStateChange = (flag) => {
         axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
@@ -46,7 +46,7 @@ export const ProjectView = () => {
     }
 
     useEffect(() => {
-        fetchFlags();
+        getFlags();
     }, []);
 
     const handleChange = (e) => {

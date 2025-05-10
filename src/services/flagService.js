@@ -21,7 +21,20 @@ export const fetchFlag = async (flagID) => {
 };
 
 export const fetchFlags = async () => {
+    try {
+        const res = await axios.get('http://localhost:8080/api/26487234/flags');
+        const fetchedFlags = res.data;
 
+        if (!fetchedFlags) {
+            return null;
+        }
+
+        return fetchedFlags;
+    } catch(error) {
+        console.log("Error fetching flags:", error);
+        // throw error
+        return null; 
+    }
 }
 
 export const createFlag = async () => {
