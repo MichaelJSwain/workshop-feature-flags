@@ -79,13 +79,24 @@ export const updateRule = async (rule) => {
     }
 }
 
-export const deleteRule = async (ruleId) => {
-    
-    // axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}/rules/${ruleId}`)
-    // .then(res => {
-    //     fetchFlag();
-    // })
-    // .catch(error => {
-    //     console.log(error);
-    // })
+export const deleteRule = async (flagID, ruleID) => {
+    console.log("deleting rule...");
+
+    try {
+        const res = await axios.delete(`http://localhost:8080/api/48923489/flags/${flagID}/rules/${ruleID}`);
+        const deletedRule = res.data;
+        console.log("updatedRule", res);
+
+
+        if (!deletedRule) {
+            // successful request with no data returned
+            return null;
+        }
+        
+        return deletedRule;
+    } catch(error) {
+        console.log("Error deleting rule:", error);
+        // throw error
+        return null; 
+    }
 }

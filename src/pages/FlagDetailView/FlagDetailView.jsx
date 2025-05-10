@@ -24,7 +24,7 @@ const emptyRule = {
   }
 
 export const FlagDetailView = () => {
-    const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, deleteRule} = useContext(DetailViewContext);
+    const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, onDeleteRule} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
     const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
 
@@ -51,8 +51,8 @@ export const FlagDetailView = () => {
         setIsShowingRuleForm(true);
     }
     
-    const handleDeleteRule = (ruleId) => {
-        deleteRule(ruleId)
+    const handleDeleteRule = (ruleID) => {
+        onDeleteRule(ruleID);
     }
 
     return (
