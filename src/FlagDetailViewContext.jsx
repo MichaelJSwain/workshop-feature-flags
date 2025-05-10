@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchFlag } from "./services/flagService";
+import { createRule, fetchFlag } from "./services/flagService";
 import axios from "axios";
 
 export const DetailViewContext = createContext();
@@ -27,6 +27,7 @@ export const FlagDetailViewContext = ({children}) => {
 
     const addRule = async (rule) => {
         console.log("adding rule....");
+        setIsLoading(true);
         const ruleConfig = {
             ...rule,
             linkedFlag: flag.key,
@@ -34,18 +35,18 @@ export const FlagDetailViewContext = ({children}) => {
             audience_conditions: "",
             audience_ids: []
         }
+        const createdRule = await createRule(ruleConfig);
+        
+        if (!createdRule) {
+            // show error message to user if no rule was created + returned
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
+        
+        setIsLoading(false);
 
-        axios.post(`http://localhost:8080/api/48923489/rules`, ruleConfig)
-        .then(res => {
-            console.log(res);
-            if (res.data) {
-                getFlag();
-            }
-            // else handle error...
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        // fetch latest flag data with new rule
+        getFlag();
     }
 
     const updateRule = async (updatedRule) => {

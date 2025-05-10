@@ -37,26 +37,24 @@ export const deleteFlag = async () => {
 }
 
 export const createRule = async (rule) => {
-    // console.log("adding rule....");
-    // const ruleConfig = {
-    //     ...rule,
-    //     linkedFlag: flag.key,
-    //     status: "paused",
-    //     audience_conditions: "",
-    //     audience_ids: []
-    // }
+    console.log("creating rule....");
 
-    // axios.post(`http://localhost:8080/api/48923489/rules`, ruleConfig)
-    // .then(res => {
-    //     console.log(res);
-    //     if (res.data) {
-    //         fetchFlag();
-    //     }
-    //     // else handle error...
-    // })
-    // .catch(error => {
-    //     console.log(error);
-    // })
+    try {
+        const res = await axios.post(`http://localhost:8080/api/48923489/rules`, rule);
+        const createdRule = res.data;
+
+        if (!createdRule) {
+            // successful request with no data returned
+            return null;
+        }
+
+        return createdRule;
+    } catch(error) {
+        console.log("Error creating rule:", error);
+        // throw error
+        return null; 
+    }
+
 }
 
 export const updateRule = async (updatedRule) => {
