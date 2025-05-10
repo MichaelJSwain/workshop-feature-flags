@@ -37,8 +37,22 @@ export const fetchFlags = async () => {
     }
 }
 
-export const createFlag = async () => {
+export const createFlag = async (name, key, description) => {
+    try {
+        const res = await axios.post(`http://localhost:8080/api/48923489/flags`, {name, key, description});
+        const createdFlag = res.data;
 
+        if (!createdFlag) {
+            // successful request with no data returned
+            return null;
+        }
+
+        return createdFlag;
+    } catch (error) {
+        console.log("Error creating flag:", error);
+        // throw error
+        return null; 
+    }
 }
 
 export const toggleFlagStatus = async () => {

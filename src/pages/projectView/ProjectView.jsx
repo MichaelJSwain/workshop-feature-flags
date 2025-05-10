@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { TableRow } from '../../components/TableRow';
 import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
-import { fetchFlags } from '../../services/flagService';
+import { createFlag, fetchFlags } from '../../services/flagService';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -69,24 +69,17 @@ export const ProjectView = () => {
     }
 
     const handleCreateFlag = async () => {
-        // update backend
-         axios.post(`http://localhost:8080/api/48923489/flags`, {
-            name: nameInputText,
-            key: keyInputText,
-            description: descInputText
-        })
-        .then(res => {
-            const flagList = res.data.data;
+        setIsLoading(true);
+        const createdFlag = await createFlag(nameInputText, keyInputText, descInputText);
 
-             // update ui
-             setFlags(flagList);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        if (!createdFlag) {
+              // show error message to user if the flag wasn't created
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
 
-       
-        
+        setIsLoading(false);
+        getFlags();
     }
 
     const handleDeleteFlag = (flag) => {
