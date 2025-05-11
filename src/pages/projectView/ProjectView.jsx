@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import './ProjectView.css'
-import axios from 'axios';
 import { createPortal } from 'react-dom';
 import { TableRow } from '../../components/TableRow';
 import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
+import { createFlag, deleteFlag, fetchFlags, toggleFlagStatus } from '../../services/flagService';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -18,35 +18,36 @@ export const ProjectView = () => {
     const [isShowingModal, setIsShowingModal] = useState(false);
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
 
-    const fetchFlags = () => {
+    const getFlags = async () => {
         setIsLoading(true);
-        axios.get('http://localhost:8080/api/26487234/flags')
-        .then(res => {
-            const fetchedFlags = res.data?.length ? res.data : [];
-            setFlags(fetchedFlags);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            console.log(error);
-            setFlags([]);
-            setIsLoading(false);
-        })
-    };
+        const fetchedFlags = await fetchFlags();
+         
+        if (!fetchedFlags) {
+            // show error message to user if no flags were returned
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
 
-    const onExperimentStateChange = (flag) => {
-        axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
-        .then(res => {
-            // update ui
-            const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: flag.status === 'running' ? 'paused' : 'running'} : {...f});
-            setFlags(updatedFlags);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        setFlags(fetchedFlags);
+        setIsLoading(false);
+    }
+
+    const onExperimentStateChange = async (flag) => {
+        setIsLoading(true);
+        const toggledFlag = await toggleFlagStatus(flag.id);
+        
+        if (!toggledFlag) {
+            // show error message to user if no flags were returned
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
+       
+        setIsLoading(false);
+        getFlags();
     }
 
     useEffect(() => {
-        fetchFlags();
+        getFlags();
     }, []);
 
     const handleChange = (e) => {
@@ -69,36 +70,31 @@ export const ProjectView = () => {
     }
 
     const handleCreateFlag = async () => {
-        // update backend
-         axios.post(`http://localhost:8080/api/48923489/flags`, {
-            name: nameInputText,
-            key: keyInputText,
-            description: descInputText
-        })
-        .then(res => {
-            const flagList = res.data.data;
+        setIsLoading(true);
+        const createdFlag = await createFlag(nameInputText, keyInputText, descInputText);
 
-             // update ui
-             setFlags(flagList);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        if (!createdFlag) {
+              // show error message to user if the flag wasn't created
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
 
-       
-        
+        setIsLoading(false);
+        getFlags();
     }
 
-    const handleDeleteFlag = (flag) => {
-        axios.delete(`http://localhost:8080/api/48923489/flags/${flag.id}`)
-        .then(res => {
-            console.log(res);
-            // update ui
-            setFlags(res.data);
-        })
-        .catch(error => {
-            console.log(error.message);
-        })
+    const handleDeleteFlag = async (flag) => {
+        setIsLoading(true);
+        const deletedFlag = await deleteFlag(flag.id);
+        
+        if (!deletedFlag) {
+              // show error message to user if the flag wasn't deleted
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
+
+        setIsLoading(false);
+        getFlags();
     }
 
     const handleFilterFlags = () => {
