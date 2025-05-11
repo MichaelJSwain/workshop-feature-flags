@@ -9,6 +9,12 @@ export const useLoading = () => {
         try {
             const res = await asyncFunc();
             return res;
+        } catch(error) {
+            console.log("error: ", err);
+            // if generic error, handle feedback here
+            //....
+            
+            return null;
         } finally {
             setIsLoading(false);
         }
