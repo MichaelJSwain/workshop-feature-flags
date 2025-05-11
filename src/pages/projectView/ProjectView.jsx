@@ -5,22 +5,22 @@ import { TableRow } from '../../components/TableRow';
 import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
 import { createFlag, deleteFlag, fetchFlags, toggleFlagStatus } from '../../services/flagService';
+import { useLoading } from '../../hooks/useLoading';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
     const [filteredFlags, setFilteredFlags] = useState([]);
     const [searchText, setSearchText] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
     const [isShowingFlagForm, setIsShowingFlagForm] = useState(false);
     const [nameInputText, setNameInputText] = useState('');
     const [keyInputText, setKeyInputText] = useState('');
     const [descInputText, setDescInputText] = useState('');
     const [isShowingModal, setIsShowingModal] = useState(false);
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
+    const {isLoading, withLoading} = useLoading();
 
     const getFlags = async () => {
-        setIsLoading(true);
-        const fetchedFlags = await fetchFlags();
+        const fetchedFlags = await withLoading(() => fetchFlags());
          
         if (!fetchedFlags) {
             // show error message to user if no flags were returned
@@ -29,12 +29,10 @@ export const ProjectView = () => {
         }
 
         setFlags(fetchedFlags);
-        setIsLoading(false);
     }
 
     const onExperimentStateChange = async (flag) => {
-        setIsLoading(true);
-        const toggledFlag = await toggleFlagStatus(flag.id);
+        const toggledFlag = await withLoading(() => toggleFlagStatus(flag.id));
         
         if (!toggledFlag) {
             // show error message to user if no flags were returned
@@ -42,7 +40,6 @@ export const ProjectView = () => {
             // ...
         }
        
-        setIsLoading(false);
         getFlags();
     }
 
@@ -70,8 +67,7 @@ export const ProjectView = () => {
     }
 
     const handleCreateFlag = async () => {
-        setIsLoading(true);
-        const createdFlag = await createFlag(nameInputText, keyInputText, descInputText);
+        const createdFlag = await withLoading(() => createFlag(nameInputText, keyInputText, descInputText));
 
         if (!createdFlag) {
               // show error message to user if the flag wasn't created
@@ -79,13 +75,11 @@ export const ProjectView = () => {
             // ...
         }
 
-        setIsLoading(false);
         getFlags();
     }
 
     const handleDeleteFlag = async (flag) => {
-        setIsLoading(true);
-        const deletedFlag = await deleteFlag(flag.id);
+        const deletedFlag = await withLoading(() => deleteFlag(flag.id));
         
         if (!deletedFlag) {
               // show error message to user if the flag wasn't deleted
@@ -93,12 +87,10 @@ export const ProjectView = () => {
             // ...
         }
 
-        setIsLoading(false);
         getFlags();
     }
 
     const handleFilterFlags = () => {
-        console.log(flags);
         const res = flags.filter(f => (f.name.includes(searchText) || f.key.includes(searchText)));
         setFilteredFlags(res);
     }
