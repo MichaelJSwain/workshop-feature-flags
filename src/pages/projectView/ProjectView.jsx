@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import './ProjectView.css'
-import axios from 'axios';
 import { createPortal } from 'react-dom';
 import { TableRow } from '../../components/TableRow';
 import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
-import { createFlag, deleteFlag, fetchFlags } from '../../services/flagService';
+import { createFlag, deleteFlag, fetchFlags, toggleFlagStatus } from '../../services/flagService';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -33,16 +32,18 @@ export const ProjectView = () => {
         setIsLoading(false);
     }
 
-    const onExperimentStateChange = (flag) => {
-        axios.patch(`http://localhost:8080/api/48923489/flags/${flag.id}`)
-        .then(res => {
-            // update ui
-            const updatedFlags = flags.map(f => flag.id === f.id ? {...flag, status: flag.status === 'running' ? 'paused' : 'running'} : {...f});
-            setFlags(updatedFlags);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+    const onExperimentStateChange = async (flag) => {
+        setIsLoading(true);
+        const toggledFlag = await toggleFlagStatus(flag.id);
+        
+        if (!toggledFlag) {
+            // show error message to user if no flags were returned
+            // e.g. setIsShowingMessage(true)
+            // ...
+        }
+       
+        setIsLoading(false);
+        getFlags();
     }
 
     useEffect(() => {

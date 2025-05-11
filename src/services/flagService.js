@@ -1,8 +1,6 @@
 import axios from "axios";
 
 export const fetchFlag = async (flagID) => {
-    console.log("fetching flag...");
-
     try {
         const res = await axios.get(`http://localhost:8080/api/26487234/flags/${flagID}`);
         const foundFlag = res.data;
@@ -55,8 +53,22 @@ export const createFlag = async (name, key, description) => {
     }
 }
 
-export const toggleFlagStatus = async () => {
+export const toggleFlagStatus = async (flagID) => {
+    try {
+        const res = await axios.patch(`http://localhost:8080/api/48923489/flags/${flagID}`);
+        const toggledFlag = res.data;
 
+        if (!toggledFlag) {
+            // successful request with no data returned
+            return null;
+        }
+        
+        return toggledFlag;
+    } catch(error) {
+        console.log("Error toggling flag status:", error);
+        // throw error
+        return null; 
+    }
 }
 
 export const deleteFlag = async (flagID) => {
@@ -74,20 +86,9 @@ export const deleteFlag = async (flagID) => {
         // throw error
         return null; 
     }
-
-    // .then(res => {
-    //     console.log(res);
-    //     // update ui
-    //     setFlags(res.data);
-    // })
-    // .catch(error => {
-    //     console.log(error.message);
-    // })
 }
 
 export const createRule = async (rule) => {
-    console.log("creating rule....");
-
     try {
         const res = await axios.post(`http://localhost:8080/api/48923489/rules`, rule);
         const createdRule = res.data;
@@ -107,13 +108,9 @@ export const createRule = async (rule) => {
 }
 
 export const updateRule = async (rule) => {
-    console.log("updating rule...");
-
     try {
         const res = await axios.patch(`http://localhost:8080/api/48923489/rules`, rule);
         const updatedRule = res.data;
-        console.log("updatedRule", res);
-
 
         if (!updatedRule) {
             // successful request with no data returned
@@ -129,8 +126,6 @@ export const updateRule = async (rule) => {
 }
 
 export const deleteRule = async (flagID, ruleID) => {
-    console.log("deleting rule...");
-
     try {
         const res = await axios.delete(`http://localhost:8080/api/48923489/flags/${flagID}/rules/${ruleID}`);
         const deletedRule = res.data;
