@@ -1,20 +1,19 @@
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { createRule, deleteRule, fetchFlag, updateRule } from "./services/flagService";
-import axios from "axios";
+import { useLoading } from "./hooks/useLoading";
 
 export const DetailViewContext = createContext();
 
 export const FlagDetailViewContext = ({children}) => {
     const [flag, setFlag] = useState();
     const [selectedRule, setSelectedRule] = useState();
-    const [isLoading, setIsLoading] = useState(false);
+    const {isLoading, withLoading} = useLoading();
     const {flagID} = useParams();
 
     const getFlag = async () => {
-        setIsLoading(true);
-        const fetchedFlag = await fetchFlag(flagID);
-        
+        const fetchedFlag = await withLoading(() => fetchFlag(flagID));
+
         if (!fetchedFlag) {
             // show error message to user if no flag was returned
             // e.g. setIsShowingMessage(true)
@@ -22,12 +21,9 @@ export const FlagDetailViewContext = ({children}) => {
         }
 
         setFlag(fetchedFlag);
-        setIsLoading(false);
-    }
+}
 
     const addRule = async (rule) => {
-        console.log("adding rule....");
-        setIsLoading(true);
         const ruleConfig = {
             ...rule,
             linkedFlag: flag.key,
@@ -35,7 +31,7 @@ export const FlagDetailViewContext = ({children}) => {
             audience_conditions: "",
             audience_ids: []
         }
-        const createdRule = await createRule(ruleConfig);
+        const createdRule = await withLoading(() => createRule(ruleConfig));
         
         if (!createdRule) {
             // show error message to user if no rule was created + returned
@@ -43,39 +39,31 @@ export const FlagDetailViewContext = ({children}) => {
             // ...
         }
 
-        setIsLoading(false);
-
         // fetch latest flag data with new rule
         getFlag();
     }
 
     const onRuleUpdate = async (rule) => {
-        setIsLoading(true);
-        const updatedRule = await updateRule(rule);
+        const updatedRule = await withLoading(() => updateRule(rule));
         
         if (!updatedRule) {
              // show error message to user if the rule was not updated
             // e.g. setIsShowingMessage(true)
             // ...
         }
-
-        setIsLoading(false);
         
         // fetch latest flag data with new rule
         getFlag();
     }
 
     const onDeleteRule = async (ruleID) => {
-         setIsLoading(true);
-        const deletedRule = await deleteRule(flag.id, ruleID);
+        const deletedRule = await withLoading(() => deleteRule(flag.id, ruleID));
        
         if (!deletedRule) {
             // show error message to user if the rule was not deleted
             // e.g. setIsShowingMessage(true)
             // ...
         }
-
-        setIsLoading(false);
 
         // fetch latest flag data with new rule
         getFlag();
