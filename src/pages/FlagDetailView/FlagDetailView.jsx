@@ -10,6 +10,7 @@ import { GridLayout } from "../../components/GridLayout/GridLayout.jsx";
 import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.jsx";
 import { Input } from "../../components/Input/Input.jsx";
 import { RuleForm } from "../../components/RuleForm/RuleForm.jsx";
+import { LoadingView } from "../../components/LoadingView/LoadingView.jsx";
 
 const emptyRule = {
     name: '',
@@ -58,9 +59,9 @@ export const FlagDetailView = () => {
     return (
             <div style={{height: '100%'}}>
                 <Link to="/flags">Back</Link>
-                {isLoading && <div>Loading...</div>}
+                {isLoading && <LoadingView></LoadingView>}
 
-                {(!isLoading && flag) && 
+                {flag && 
                     <>
                     
                     <div style={{textAlign: "left", margin: "20px 20px 40px"}}>
