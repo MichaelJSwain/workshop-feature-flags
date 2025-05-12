@@ -13,7 +13,7 @@
 .loading-message {
     display: flex;
     align-items: center;
-    gap: 12px;    
+    gap: 15px;    
 }
 
 .loading-spinner {
