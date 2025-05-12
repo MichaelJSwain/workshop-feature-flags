@@ -11,6 +11,8 @@ import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.j
 import { Input } from "../../components/Input/Input.jsx";
 import { RuleForm } from "../../components/RuleForm/RuleForm.jsx";
 import { LoadingView } from "../../components/LoadingView/LoadingView.jsx";
+import { createPortal } from "react-dom";
+import { Modal } from "../../components/Modal/Modal.jsx";
 
 const emptyRule = {
     name: '',
@@ -25,7 +27,7 @@ const emptyRule = {
   }
 
 export const FlagDetailView = () => {
-    const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, onDeleteRule} = useContext(DetailViewContext);
+    const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, onDeleteRule, isShowingError, setIsShowingError, errorMessage} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
     const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
 
@@ -151,11 +153,11 @@ export const FlagDetailView = () => {
                     </>
                 }
 
-                {(!isLoading && !flag) && 
-                    <div>
-                        <div>Error!</div>
-                    </div>
-                }
+                {isShowingError && createPortal(<Modal submitFunc={() => setIsShowingError(false)} closeFunc={() => setIsShowingError(false)} header={errorMessage.header} cta="Ok">
+                        <p>{errorMessage.message}</p>
+                    </Modal>,
+                    document.getElementById('react_portal')
+                    )}
             </div>
     )
 }

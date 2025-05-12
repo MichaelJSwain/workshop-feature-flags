@@ -19,14 +19,21 @@ export const ProjectView = () => {
     const [isShowingModal, setIsShowingModal] = useState(false);
     const [isShowingTooltip, setIsShowingTooltip] = useState(false);
     const {isLoading, withLoading} = useLoading();
+    const [isShowingError, setIsShowingError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState({header: "", message: ""});
 
     const getFlags = async () => {
         const fetchedFlags = await withLoading(() => fetchFlags());
-         
+
         if (!fetchedFlags) {
             // show error message to user if no flags were returned
             // e.g. setIsShowingMessage(true)
-            // ...
+            // ... 
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to get flags",
+                message: "Please try again later"
+            });
         }
 
         setFlags(fetchedFlags);
@@ -39,6 +46,11 @@ export const ProjectView = () => {
             // show error message to user if no flags were returned
             // e.g. setIsShowingMessage(true)
             // ...
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to toggle flag status",
+                message: "Please try again later"
+            });
         }
        
         getFlags();
@@ -69,11 +81,16 @@ export const ProjectView = () => {
 
     const handleCreateFlag = async () => {
         const createdFlag = await withLoading(() => createFlag(nameInputText, keyInputText, descInputText));
-
+        
         if (!createdFlag) {
               // show error message to user if the flag wasn't created
             // e.g. setIsShowingMessage(true)
             // ...
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to create flag",
+                message: "Please try again later"
+            });
         }
 
         getFlags();
@@ -81,11 +98,16 @@ export const ProjectView = () => {
 
     const handleDeleteFlag = async (flag) => {
         const deletedFlag = await withLoading(() => deleteFlag(flag.id));
-        
+
         if (!deletedFlag) {
-              // show error message to user if the flag wasn't deleted
+            // show error message to user if the flag wasn't deleted
             // e.g. setIsShowingMessage(true)
             // ...
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to create flag",
+                message: "Please try again later"
+            });
         }
 
         getFlags();
@@ -169,6 +191,11 @@ export const ProjectView = () => {
 
             {(!isLoading && !flags.length && !filteredFlags.length) && <div>You haven't created any flags yet. Get started by clicking the 'Create new flag...' button</div>}
             {(!isLoading && !!flags.length && !filteredFlags.length) && <div>No matching flags were found for your search term. Try again?</div>}
+            {isShowingError && createPortal(<Modal submitFunc={() => setIsShowingError(false)} closeFunc={() => setIsShowingError(false)} header={errorMessage.header} cta="Ok">
+                    <p>{errorMessage.message}</p>
+                </Modal>,
+                document.getElementById('react_portal')
+                )}
         </div> 
     )
 }

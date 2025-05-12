@@ -10,6 +10,8 @@ export const FlagDetailViewContext = ({children}) => {
     const [selectedRule, setSelectedRule] = useState();
     const {isLoading, withLoading} = useLoading();
     const {flagID} = useParams();
+    const [isShowingError, setIsShowingError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState({header: "", message: ""});
 
     const getFlag = async () => {
         const fetchedFlag = await withLoading(() => fetchFlag(flagID));
@@ -18,6 +20,11 @@ export const FlagDetailViewContext = ({children}) => {
             // show error message to user if no flag was returned
             // e.g. setIsShowingMessage(true)
             // ...
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to get flag",
+                message: "Please try again later"
+            });
         }
 
         setFlag(fetchedFlag);
@@ -32,11 +39,16 @@ export const FlagDetailViewContext = ({children}) => {
             audience_ids: []
         }
         const createdRule = await withLoading(() => createRule(ruleConfig));
-        
+
         if (!createdRule) {
             // show error message to user if no rule was created + returned
             // e.g. setIsShowingMessage(true)
             // ...
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to create rule",
+                message: "Please try again later"
+            });
         }
 
         // fetch latest flag data with new rule
@@ -46,10 +58,16 @@ export const FlagDetailViewContext = ({children}) => {
     const onRuleUpdate = async (rule) => {
         const updatedRule = await withLoading(() => updateRule(rule));
         
+  
         if (!updatedRule) {
              // show error message to user if the rule was not updated
             // e.g. setIsShowingMessage(true)
             // ...
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to update rule",
+                message: "Please try again later"
+            });
         }
         
         // fetch latest flag data with new rule
@@ -58,11 +76,16 @@ export const FlagDetailViewContext = ({children}) => {
 
     const onDeleteRule = async (ruleID) => {
         const deletedRule = await withLoading(() => deleteRule(flag.id, ruleID));
-       
+
         if (!deletedRule) {
             // show error message to user if the rule was not deleted
             // e.g. setIsShowingMessage(true)
-            // ...
+            // ...      
+            setIsShowingError(true);
+            setErrorMessage({
+                header: "Unable to delete rule",
+                message: "Please try again later"
+            });
         }
 
         // fetch latest flag data with new rule
@@ -74,7 +97,7 @@ export const FlagDetailViewContext = ({children}) => {
     }, []);
 
     return (
-        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, onRuleUpdate, onDeleteRule}}>
+        <DetailViewContext.Provider value={{flag, setFlag, selectedRule, onRuleSelect: setSelectedRule, isLoading, addRule, onRuleUpdate, onDeleteRule, isShowingError, setIsShowingError, errorMessage}}>
             {children}
         </DetailViewContext.Provider>
     )
