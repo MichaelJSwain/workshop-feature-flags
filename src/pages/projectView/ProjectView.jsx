@@ -6,7 +6,6 @@ import { Modal } from '../../components/Modal/Modal';
 import { Button } from '../../components/Button/Button';
 import { createFlag, deleteFlag, fetchFlags, toggleFlagStatus } from '../../services/flagService';
 import { useLoading } from '../../hooks/useLoading';
-import { LoadingView } from '../../components/LoadingView/LoadingView';
 
 export const ProjectView = () => {
     const [flags, setFlags] = useState([]);
@@ -146,9 +145,9 @@ export const ProjectView = () => {
             </div>
 
             {/* table */}
-            {isLoading && <LoadingView></LoadingView>}
+            {isLoading && <div>Loading...</div>}
 
-            {!!flags.length && <div className="project-container">
+            {(!isLoading && !!flags.length) && <div className="project-container">
                 <table>
                     <thead>
                         <tr>
