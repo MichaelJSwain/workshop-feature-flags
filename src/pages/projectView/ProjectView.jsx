@@ -131,7 +131,7 @@ export const ProjectView = () => {
         <div className='project-view'>
             {isShowingModal && 
             createPortal(
-                <Modal closeFunc={() => setIsShowingModal(false)} submitFunc={handleCreateFlag} header="Create Flag" cta="Create">
+                <Modal closeFunc={() => setIsShowingModal(false)} submitFunc={() => {handleCreateFlag(); setIsShowingModal(false);}} header="Create Flag" cta="Create">
                         <div style={{display: 'flex', flexDirection: 'column', textAlign: 'left', marginBottom: '24px'}}>
                             <label htmlFor='name'>Name:</label>
                             <input id='name' placeholder='Add name' value={nameInputText} onChange={(e) => handleChange(e)} style={{background: 'white', borderRadius: '2px', border: '0.5px solid gray', marginTop: '8px', color: 'black'}}></input>

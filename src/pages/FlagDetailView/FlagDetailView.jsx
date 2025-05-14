@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { LayoutArea } from "../../components/LayoutArea/LayoutArea";
 import { LayoutGrid } from "../../components/LayoutGrid/LayoutGrid";
@@ -30,8 +30,15 @@ export const FlagDetailView = () => {
     const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, onDeleteRule, isShowingError, setIsShowingError, errorMessage} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
     const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
+    const ruleFormRef = useRef(null)
+
+    const handleRuleFormSubmit = () => {
+        console.log("rule form ref = ", ruleFormRef);
+        ruleFormRef.current.increment();
+    }
 
     const handleAddRule = (ruleForme) => {
+        console.log("adding rule...");
         // validation logic...
 
         // send validated rule
@@ -88,7 +95,11 @@ export const FlagDetailView = () => {
                         </div>
                     </div>
 
-                     {isShowingRuleForm && <RuleForm initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule} closeFunc={() => setIsShowingRuleForm(false)}></RuleForm>}
+                     {isShowingRuleForm && createPortal(<Modal submitFunc={handleRuleFormSubmit} closeFunc={() => setIsShowingRuleForm(false)} header="Add rule" cta="Ok">
+                        <RuleForm ref={ruleFormRef} initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule}></RuleForm>
+                    </Modal>,
+                    document.getElementById('react_portal')
+                    )} 
                      <div style={{border: "1px solid black", padding: "20px 30px"}}>
                     <div style={{display: "flex", justifyContent: "space-between", marginBottom: "20px"}}>
                         <h2 style={{textAlign: "left", margin: "0px"}}>Rules</h2>
@@ -153,7 +164,7 @@ export const FlagDetailView = () => {
                     </>
                 }
 
-                {isShowingError && createPortal(<Modal submitFunc={() => setIsShowingError(false)} closeFunc={() => setIsShowingError(false)} header={errorMessage.header} cta="Ok">
+                {isShowingError && createPortal(<Modal submitFunc={() => {setIsShowingError(false);}} closeFunc={() => setIsShowingError(false)} header={errorMessage.header} cta="Ok">
                         <p>{errorMessage.message}</p>
                     </Modal>,
                     document.getElementById('react_portal')

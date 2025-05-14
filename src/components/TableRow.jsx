@@ -17,7 +17,7 @@ export const TableRow = ({flag, handleExperimentStateChange, handleDeleteFlag}) 
     <td>{flag.status}</td>
     <td>
         {isShowingWarning && createPortal(
-        <Modal closeFunc={() => setIsShowingWarning(false)} submitFunc={() => handleExperimentStateChange(flag)} header="Toggle Flag" cta="Confirm">
+        <Modal closeFunc={() => setIsShowingWarning(false)} submitFunc={() => {handleExperimentStateChange(flag); setIsShowingWarning(false);}} header="Toggle Flag" cta="Confirm">
             <div>
                 Are you sure you want to set the status of this experiment to  
                 <strong>{flag.status === 'running' ? ' paused' : ' running'}?</strong>

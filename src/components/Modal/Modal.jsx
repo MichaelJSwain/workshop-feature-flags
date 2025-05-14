@@ -7,7 +7,7 @@ export const Modal = ({children, closeFunc, submitFunc, header, cta}) => {
             <div className='modal-overlay'></div>
             <div className='modal'>
                 <div className='modal-content'>
-                    <form onSubmit={(e) => {e.preventDefault(); submitFunc(e); closeFunc(false);}}>
+                    <form onSubmit={(e) => {e.preventDefault(); submitFunc(e);}}>
                         <div className="modal-header">
                             <div>
                                 <h4 className="modal-title">
