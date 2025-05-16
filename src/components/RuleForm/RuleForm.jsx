@@ -1,27 +1,31 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react";
+import { DetailViewContext } from "../../FlagDetailViewContext";
 
 export const RuleForm = forwardRef((props, ref) => {
     const {initialValues, submitFunc} = props;
-    const [count, setCount] = useState(0);
+    const [currentStep, setCurrentStep] = useState(1);
     const [ruleForm, setRuleForm] = useState(initialValues);
+    const {addRule} = useContext(DetailViewContext);
    
-    const updateCount = () => {
-        if (count < 2) {
-            console.log("incrementing from handle..")
-            setCount(prevValue => {
+
+  useImperativeHandle(ref, () => ({
+    handleSubmitOrNext() {
+      if (currentStep < 2) {
+          setCurrentStep(prevValue => {
                 return prevValue + 1;
             });
-        } else {
-            console.log("submitting....");
-            submitFunc(ruleForm);
-        }
-    }
-
-    useImperativeHandle(ref, () => {
-    return {
-      increment: updateCount
-    };
-  })
+        return {isLastStep: false}
+      } else if (currentStep === 2 ) {
+          setCurrentStep(prevValue => {
+                return prevValue + 1;
+            });
+        return {isLastStep: true}
+      } else {
+        submitFunc(ruleForm);
+        return {hasSubmitted: true}
+      }
+    },
+  }));
 
 
 
@@ -86,7 +90,7 @@ export const RuleForm = forwardRef((props, ref) => {
     
     return (
             <>
-                {count === 0 && <>
+                {currentStep === 1 && <>
                                         <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
                         <label htmlFor="name" style={{textAlign: "left"}}>Rule name:</label>
                         <input type="text" id="name" name="name" onChange={handleRuleFormChange} value={ruleForm.name}/>
@@ -105,7 +109,7 @@ export const RuleForm = forwardRef((props, ref) => {
                     </fieldset>
                 </>}
 
-                    {count === 1 && <>
+                    {currentStep === 2 && <>
                         <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
                             <label htmlFor="percentage" style={{textAlign: "left"}}>Percentage included:</label>
                             <input type="text" id="percentage" name="percentage_included" onChange={handleRuleFormChange} value={ruleForm.percentage_included}/>
@@ -113,7 +117,7 @@ export const RuleForm = forwardRef((props, ref) => {
                     </>
                     }
 
-                    {count === 2 && <>
+                    {currentStep === 3 && <>
                                         <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
                         <label htmlFor="variants" style={{textAlign: "left"}}>Variants:</label>
                         <div style={{display: "flex", flexDirection: "column", marginBottom: "10px"}}>

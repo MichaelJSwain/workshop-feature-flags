@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { LayoutArea } from "../../components/LayoutArea/LayoutArea";
 import { LayoutGrid } from "../../components/LayoutGrid/LayoutGrid";
@@ -9,54 +9,17 @@ import { DetailViewContext } from "../../FlagDetailViewContext.jsx"
 import { GridLayout } from "../../components/GridLayout/GridLayout.jsx";
 import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.jsx";
 import { Input } from "../../components/Input/Input.jsx";
-import { RuleForm } from "../../components/RuleForm/RuleForm.jsx";
 import { LoadingView } from "../../components/LoadingView/LoadingView.jsx";
 import { createPortal } from "react-dom";
 import { Modal } from "../../components/Modal/Modal.jsx";
-
-const emptyRule = {
-    name: '',
-    key: '',
-    description: '',
-    hypothesis: '',
-    percentage_included: 100,
-    variations: [
-      { name: 'Control', key: 1, variation_id: 2348324, percentage_included: 5000 },
-      { name: 'Variation 1', key: 2, variation_id: 2834908, percentage_included: 50000 }
-    ]
-  }
+import { RuleModal } from "../../components/RuleModal/RuleModal.jsx";
 
 export const FlagDetailView = () => {
-    const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, onDeleteRule, isShowingError, setIsShowingError, errorMessage} = useContext(DetailViewContext);
+    const {flag, isLoading, onDeleteRule, isShowingError, setIsShowingError, errorMessage} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
     const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
-    const ruleFormRef = useRef(null)
-
-    const handleRuleFormSubmit = () => {
-        console.log("rule form ref = ", ruleFormRef);
-        ruleFormRef.current.increment();
-    }
-
-    const handleAddRule = (ruleForme) => {
-        console.log("adding rule...");
-        // validation logic...
-
-        // send validated rule
-        addRule(ruleForme);
-        setIsShowingRuleForm(false);
-    }
-
-    const handleUpdateRule = (ruleForm, id) => {
-        // validation logic...
-
-        // send validated rule
-        console.log("updating rule");
-        onRuleUpdate(ruleForm);
-        setIsShowingRuleForm(false);
-    }
 
     const handleRuleFormTrigger = (selectedRule = null) => {
-        console.log("handle rule form trigger with selected rule = ", selectedRule);
         setSelectedRule(selectedRule);
         setIsShowingRuleForm(true);
     }
@@ -95,9 +58,7 @@ export const FlagDetailView = () => {
                         </div>
                     </div>
 
-                     {isShowingRuleForm && createPortal(<Modal submitFunc={handleRuleFormSubmit} closeFunc={() => setIsShowingRuleForm(false)} header="Add rule" cta="Ok">
-                        <RuleForm ref={ruleFormRef} initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule}></RuleForm>
-                    </Modal>,
+                     {isShowingRuleForm && createPortal(<RuleModal closeModal={() => setIsShowingRuleForm(false)} selectedRule={selectedRule}></RuleModal>,
                     document.getElementById('react_portal')
                     )} 
                      <div style={{border: "1px solid black", padding: "20px 30px"}}>
