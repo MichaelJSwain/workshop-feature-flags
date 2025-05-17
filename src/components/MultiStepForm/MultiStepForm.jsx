@@ -1,4 +1,5 @@
 import { Children, cloneElement, createRef, forwardRef, useImperativeHandle, useRef, useState } from "react"
+import { ProgressBar } from "../ProgressBar/ProgressBar";
 
 export const MultiStepForm = forwardRef((props, ref) => {
     const {children, submitFunc} = props;
@@ -53,9 +54,8 @@ export const MultiStepForm = forwardRef((props, ref) => {
 
     return (
         <div>
-            Multi-step form
-            {/* {stepsWithRefs[currentStep]} */}
-          {stepsWithRefs.map((step, index) => (
+            <ProgressBar steps={steps} currentStep={currentStep}></ProgressBar>
+            {stepsWithRefs.map((step, index) => (
             <div key={index} style={{ display: index === currentStep ? 'block' : 'none' }}>
                 {step}
             </div>

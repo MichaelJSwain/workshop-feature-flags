@@ -1,0 +1,15 @@
+.progress-bar-step {
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+    background: rgb(201, 201, 245);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.active {
+    background: blue;
+}
