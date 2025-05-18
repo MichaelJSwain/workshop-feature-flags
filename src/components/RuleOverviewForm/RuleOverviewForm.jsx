@@ -4,7 +4,9 @@ export const RuleOverviewForm = forwardRef((props, ref) => {
     const {onChange, initialValues} = props;
     const [formData, setFormData] = useState({
         name: initialValues?.name || "",
-        key: initialValues?.key || ""
+        key: initialValues?.key || "",
+        description: initialValues?.description || "",
+        hypothesis: initialValues?.hypothesis || "",
     })
     const [formErrors, setFormErrors] = useState({
         name: {
@@ -14,6 +16,14 @@ export const RuleOverviewForm = forwardRef((props, ref) => {
         key: {
             isError: false,
             message: "Please enter a key"
+        },
+        description: {
+            isError: false,
+            message: "Please enter a description"
+        },
+        hypothesis: {
+            isError: false,
+            message: "Please enter a hypothesis"
         }
     })
 
@@ -30,7 +40,9 @@ export const RuleOverviewForm = forwardRef((props, ref) => {
             validate: () => {
                 const errors = {
                     name: false,
-                    key: false
+                    key: false,
+                    description: false,
+                    hypothesis: false
                 }
                 if (formData.name === "") {
                     errors.name = true;
@@ -38,15 +50,23 @@ export const RuleOverviewForm = forwardRef((props, ref) => {
                 if (formData.key === "") {
                     errors.key = true;
                 }
+                if (formData.description === "") {
+                    errors.description = true;
+                }
+                if (formData.hypothesis === "") {
+                    errors.hypothesis = true;
+                }
            
                 if (errors.name || errors.key) {
                     setFormErrors(prevValue => {
                         const copy = {...prevValue};
                         copy.name.isError = errors.name;
                         copy.key.isError = errors.key;
+                        copy.description.isError = errors.description;
+                        copy.hypothesis.isError = errors.hypothesis;
                         return copy;
                     })
-                    return {isValid: false, message: "Invalid name or key"}
+                    return {isValid: false, message: "Invalid name, key, description, hypothesis"}
                 }
 
                 return {isValid: true, message: "Success"}
@@ -70,6 +90,16 @@ export const RuleOverviewForm = forwardRef((props, ref) => {
                 <label>Key:</label>
                 <input name="key" onChange={handleOnChange} value={formData.key}></input>
                 {formErrors.key.isError && <div>{formErrors.key.message}</div>}
+            </fieldset>
+            <fieldset>
+                <label>Description:</label>
+                <input name="description" onChange={handleOnChange} value={formData.description}></input>
+                {formErrors.description.isError && <div>{formErrors.description.message}</div>}
+            </fieldset>
+            <fieldset>
+                <label>Hypothesis:</label>
+                <input name="hypothesis" onChange={handleOnChange} value={formData.hypothesis}></input>
+                {formErrors.hypothesis.isError && <div>{formErrors.hypothesis.message}</div>}
             </fieldset>
         </div>
     )

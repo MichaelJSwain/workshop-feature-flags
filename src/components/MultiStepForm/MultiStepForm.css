@@ -1,0 +1,14 @@
+fieldset {
+    display: flex;
+    flex-direction: column;
+    border: none;
+    text-align: left;
+    padding: 0;
+}
+fieldset:not(:last-of-type) {
+    margin-bottom: 16px;
+}
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}

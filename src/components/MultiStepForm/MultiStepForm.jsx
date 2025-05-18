@@ -1,5 +1,6 @@
 import { Children, cloneElement, createRef, forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { ProgressBar } from "../ProgressBar/ProgressBar";
+import "./MultiStepForm.css";
 
 export const MultiStepForm = forwardRef((props, ref) => {
     const {children, submitFunc} = props;
