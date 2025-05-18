@@ -1,7 +1,33 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react";
+import { DetailViewContext } from "../../FlagDetailViewContext";
 
-export const RuleForm = ({initialValues, submitFunc, closeFunc}) => {
-      const [ruleForm, setRuleForm] = useState(initialValues);
+export const RuleForm = forwardRef((props, ref) => {
+    const {initialValues, submitFunc} = props;
+    const [currentStep, setCurrentStep] = useState(1);
+    const [ruleForm, setRuleForm] = useState(initialValues);
+    const {addRule} = useContext(DetailViewContext);
+   
+
+  useImperativeHandle(ref, () => ({
+    handleSubmitOrNext() {
+      if (currentStep < 2) {
+          setCurrentStep(prevValue => {
+                return prevValue + 1;
+            });
+        return {isLastStep: false}
+      } else if (currentStep === 2 ) {
+          setCurrentStep(prevValue => {
+                return prevValue + 1;
+            });
+        return {isLastStep: true}
+      } else {
+        submitFunc(ruleForm);
+        return {hasSubmitted: true}
+      }
+    },
+  }));
+
+
 
           useEffect(() => {
             setRuleForm(initialValues)
@@ -61,24 +87,11 @@ export const RuleForm = ({initialValues, submitFunc, closeFunc}) => {
             const updatedForm = {...ruleForm, variations: updatedVariations};
             setRuleForm(updatedForm);
         }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        submitFunc(ruleForm);
-    }
     
     return (
-        <div style={{position: "fixed", top: "0px", left: "0px", width: "100vw", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <div style={{position: "absolute", width: "100%", height: "100%", background: "rgba(255,255,255, .5)"}}></div>
-            <div style={{maxWidth: "500px", zIndex: "9", border: "1px solid black", padding: "20px", height: "80vh", overflow: "scroll", background: "white"}}>
-                <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <h1>Add new rule</h1>
-                    <button type="button" onClick={closeFunc} style={{background: "gray"}}>
-                        X
-                    </button>
-                </div>
-                <form onSubmit={handleSubmit}>
-                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+            <>
+                {currentStep === 1 && <>
+                                        <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
                         <label htmlFor="name" style={{textAlign: "left"}}>Rule name:</label>
                         <input type="text" id="name" name="name" onChange={handleRuleFormChange} value={ruleForm.name}/>
                     </fieldset>
@@ -94,11 +107,18 @@ export const RuleForm = ({initialValues, submitFunc, closeFunc}) => {
                         <label htmlFor="description" style={{textAlign: "left"}}>Rule description:</label>
                         <input type="text" id="description" name="description" onChange={handleRuleFormChange} value={ruleForm.description}/>
                     </fieldset>
-                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
-                        <label htmlFor="percentage" style={{textAlign: "left"}}>Percentage included:</label>
-                        <input type="text" id="percentage" name="percentage_included" onChange={handleRuleFormChange} value={ruleForm.percentage_included}/>
-                    </fieldset>
-                    <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                </>}
+
+                    {currentStep === 2 && <>
+                        <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
+                            <label htmlFor="percentage" style={{textAlign: "left"}}>Percentage included:</label>
+                            <input type="text" id="percentage" name="percentage_included" onChange={handleRuleFormChange} value={ruleForm.percentage_included}/>
+                        </fieldset>
+                    </>
+                    }
+
+                    {currentStep === 3 && <>
+                                        <fieldset style={{display: "flex", flexDirection: "column", border: "none"}}>
                         <label htmlFor="variants" style={{textAlign: "left"}}>Variants:</label>
                         <div style={{display: "flex", flexDirection: "column", marginBottom: "10px"}}>
                             {ruleForm.variations.map((variation, index) => {
@@ -114,13 +134,8 @@ export const RuleForm = ({initialValues, submitFunc, closeFunc}) => {
                         </div>
                         <button type="button" onClick={addVariation}>+ Add variation</button>
                     </fieldset>
-                    
-                    <div style={{display: "flex", justifyContent: "flex-end", gap: "10px", margin: "20px 0"}}>
-                        <button type="button" onClick={closeFunc}>Cancel</button>
-                        <button type="submit">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                    </>}
+
+       </>
     )
-}
+});

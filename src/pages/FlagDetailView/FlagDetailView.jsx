@@ -9,47 +9,17 @@ import { DetailViewContext } from "../../FlagDetailViewContext.jsx"
 import { GridLayout } from "../../components/GridLayout/GridLayout.jsx";
 import { GridLayoutItem } from "../../components/GridLayoutItem/GridLayoutItem.jsx";
 import { Input } from "../../components/Input/Input.jsx";
-import { RuleForm } from "../../components/RuleForm/RuleForm.jsx";
 import { LoadingView } from "../../components/LoadingView/LoadingView.jsx";
 import { createPortal } from "react-dom";
 import { Modal } from "../../components/Modal/Modal.jsx";
-
-const emptyRule = {
-    name: '',
-    key: '',
-    description: '',
-    hypothesis: '',
-    percentage_included: 100,
-    variations: [
-      { name: 'Control', key: 1, variation_id: 2348324, percentage_included: 5000 },
-      { name: 'Variation 1', key: 2, variation_id: 2834908, percentage_included: 50000 }
-    ]
-  }
+import { RuleModal } from "../../components/RuleModal/RuleModal.jsx";
 
 export const FlagDetailView = () => {
-    const {flag, isLoading, onRuleSelect, addRule, onRuleUpdate, onDeleteRule, isShowingError, setIsShowingError, errorMessage} = useContext(DetailViewContext);
+    const {flag, isLoading, onDeleteRule, isShowingError, setIsShowingError, errorMessage} = useContext(DetailViewContext);
     const [selectedRule, setSelectedRule] = useState(null);
     const [isShowingRuleForm, setIsShowingRuleForm] = useState(false);
 
-    const handleAddRule = (ruleForme) => {
-        // validation logic...
-
-        // send validated rule
-        addRule(ruleForme);
-        setIsShowingRuleForm(false);
-    }
-
-    const handleUpdateRule = (ruleForm, id) => {
-        // validation logic...
-
-        // send validated rule
-        console.log("updating rule");
-        onRuleUpdate(ruleForm);
-        setIsShowingRuleForm(false);
-    }
-
     const handleRuleFormTrigger = (selectedRule = null) => {
-        console.log("handle rule form trigger with selected rule = ", selectedRule);
         setSelectedRule(selectedRule);
         setIsShowingRuleForm(true);
     }
@@ -88,7 +58,9 @@ export const FlagDetailView = () => {
                         </div>
                     </div>
 
-                     {isShowingRuleForm && <RuleForm initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? handleUpdateRule : handleAddRule} closeFunc={() => setIsShowingRuleForm(false)}></RuleForm>}
+                     {isShowingRuleForm && createPortal(<RuleModal closeModal={() => setIsShowingRuleForm(false)} selectedRule={selectedRule}></RuleModal>,
+                    document.getElementById('react_portal')
+                    )} 
                      <div style={{border: "1px solid black", padding: "20px 30px"}}>
                     <div style={{display: "flex", justifyContent: "space-between", marginBottom: "20px"}}>
                         <h2 style={{textAlign: "left", margin: "0px"}}>Rules</h2>
@@ -153,7 +125,7 @@ export const FlagDetailView = () => {
                     </>
                 }
 
-                {isShowingError && createPortal(<Modal submitFunc={() => setIsShowingError(false)} closeFunc={() => setIsShowingError(false)} header={errorMessage.header} cta="Ok">
+                {isShowingError && createPortal(<Modal submitFunc={() => {setIsShowingError(false);}} closeFunc={() => setIsShowingError(false)} header={errorMessage.header} cta="Ok">
                         <p>{errorMessage.message}</p>
                     </Modal>,
                     document.getElementById('react_portal')
