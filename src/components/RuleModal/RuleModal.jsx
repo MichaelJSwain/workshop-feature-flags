@@ -47,7 +47,6 @@ export const RuleModal = ({closeModal, selectedRule = null}) => {
 
     return (
         <Modal submitFunc={handleModalSubmit} closeFunc={closeModal} header="Add rule" cta={buttonText}>
-            {/* <RuleForm ref={formRef} initialValues={selectedRule || emptyRule} submitFunc={selectedRule ? updateRule : createRule}></RuleForm> */}
             <MultiStepForm ref={formRef} submitFunc={selectedRule ? updateRule : createRule}>
                 <RuleOverviewForm initialValues={selectedRule ? {name: selectedRule.name, key: selectedRule.key} : null}></RuleOverviewForm>
                 <RuleTrafficForm initialValues={selectedRule ? selectedRule.percentage_included : null}></RuleTrafficForm>

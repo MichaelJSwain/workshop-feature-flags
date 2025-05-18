@@ -2,14 +2,35 @@
     height: 30px;
     width: 30px;
     border-radius: 30px;
-    background: rgb(201, 201, 245);
-    color: white;
+    border: 2px solid lightgray;
+    box-sizing: border-box;
+    color: lightgray;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
-.active {
-    background: blue;
+.progress-bar-step-container {
+    display: flex;
+    align-items: center;
+}
+.progress-bar-step-container:not(:last-of-type):after {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 100px;
+    background: lightgray;
+}
+.progress-bar-step-container.complete:not(:last-of-type):after {
+    background: #46456B;
+}
+.progress-bar-step-container.active .progress-bar-step {
+    background: #46456B !important;
+    color: white !important;
+    border: none;
+}
+.progress-bar-step-container.complete .progress-bar-step {
+    background: #46456B;
+    border: none;
+    color: white
 }
