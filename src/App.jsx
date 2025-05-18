@@ -5,6 +5,8 @@ import { ProjectView } from './pages/ProjectView/ProjectView';
 import { FlagDetailView } from './pages/FlagDetailView/FlagDetailView';
 import { FlagDetailViewContext } from './FlagDetailViewContext';
 import { SidebarNav } from './components/SidebarNav/SidebarNav';
+import { AudiencesView } from './pages/AudiencesView/AudiencesView';
+import { EventsView } from './pages/EventsView/EventsView';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
               <FlagDetailViewContext>
                 <FlagDetailView />
               </FlagDetailViewContext>}/>
+            <Route path="/audiences" element={<AudiencesView/>}/>
+            <Route path="/events" element={<EventsView/>}/>
             <Route path="*" element={<Navigate to="/flags" replace />}/>
           </Routes>
         </main>
