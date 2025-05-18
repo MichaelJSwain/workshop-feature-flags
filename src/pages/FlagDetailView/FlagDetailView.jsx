@@ -30,7 +30,6 @@ export const FlagDetailView = () => {
 
     return (
             <div style={{height: '100%'}}>
-                <Link to="/flags">Back</Link>
                 {isLoading && <LoadingView></LoadingView>}
 
                 {flag && 
