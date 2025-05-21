@@ -4,25 +4,28 @@ import { Header } from './components/Header/Header';
 import { ProjectView } from './pages/ProjectView/ProjectView';
 import { FlagDetailView } from './pages/FlagDetailView/FlagDetailView';
 import { FlagDetailViewContext } from './FlagDetailViewContext';
+import { SidebarNav } from './components/SidebarNav/SidebarNav';
+import { AudiencesView } from './pages/AudiencesView/AudiencesView';
+import { EventsView } from './pages/EventsView/EventsView';
 
 function App() {
   return (
-    <>
-      <div id="react_portal"></div>
-      <Header />
-      
-      <BrowserRouter>
+    <BrowserRouter>
+        <div id="react_portal"></div>
+        <SidebarNav></SidebarNav>
+        <main style={{padding: "0px 30px 0 270px"}}>
           <Routes>
             <Route path="/flags" element={<ProjectView />}/>
             <Route path="/flags/:flagID" element={
               <FlagDetailViewContext>
                 <FlagDetailView />
               </FlagDetailViewContext>}/>
+            <Route path="/audiences" element={<AudiencesView/>}/>
+            <Route path="/events" element={<EventsView/>}/>
             <Route path="*" element={<Navigate to="/flags" replace />}/>
           </Routes>
-      </BrowserRouter>
-      
-    </>
+        </main>
+     </BrowserRouter>
   )
 }
 
